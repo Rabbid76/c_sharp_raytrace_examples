@@ -21,14 +21,9 @@ namespace rt_1_in_one_week.View
     /// </summary>
     public partial class RayTracingView : Window
     {
-        RayTraceViewModel _rt_vm = new RayTraceViewModel();
-
         public RayTracingView()
         {
             InitializeComponent();
-
-            _rt_vm.Formular = this;
-            this.DataContext = _rt_vm;
         }
     }
 }

@@ -41,13 +41,14 @@ namespace rt_1_in_one_week.Model
             {
                 viewModel.SetBitmapPixel(100+x, 100+y, c);
                 x++;
+                viewModel.Progress = ((double)y * 100.0 + (double)x) / 10000.0;
                 if (x == 100)
                 {
                     y++;
                     x = 0;
                 }
                 run = y < 100;
-                Thread.Sleep(10);
+                Thread.Sleep(1);
             }
         }
     }

@@ -15,7 +15,6 @@ namespace rt_1_in_one_week.ViewModel
     public class RayTraceViewModel
         : INotifyPropertyChanged
     {
-        public RayTracingView Formular { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         private RayTraceModel _rt_model = new RayTraceModel();
@@ -24,6 +23,7 @@ namespace rt_1_in_one_week.ViewModel
         private Bitmap _rt_bitmap;
         private bool _rt_bitmap_valid = false;
         private readonly object _bitmap_lock = new object();
+        private double _progress = 0.0;
 
         public RayTraceViewModel()
         {
@@ -65,7 +65,6 @@ namespace rt_1_in_one_week.ViewModel
             }
         }
 
-       
         public Bitmap RayTraceBitmap
         {
             set
@@ -74,7 +73,7 @@ namespace rt_1_in_one_week.ViewModel
                 {
                     this._rt_bitmap = value;
                 }
-                NotifyImgeCourceChanged();
+                NotifyImgeSourceChanged();
             }
         }
 
@@ -85,10 +84,10 @@ namespace rt_1_in_one_week.ViewModel
                 if (this._rt_bitmap != null)
                     this._rt_bitmap.SetPixel(x, y, c);
             }
-            NotifyImgeCourceChanged();
+            NotifyImgeSourceChanged();
         }
 
-        private void NotifyImgeCourceChanged()
+        private void NotifyImgeSourceChanged()
         {
             this._rt_bitmap_valid = false; 
             this.OnPropertyChanged("RayTraceImage");
@@ -116,6 +115,16 @@ namespace rt_1_in_one_week.ViewModel
             finally
             {
                 DeleteObject(bm_handle);
+            }
+        }
+
+        public double Progress
+        {
+            get { return _progress; }
+            set
+            {
+                _progress = value * 100.0;
+                OnPropertyChanged("Progress");
             }
         }
     }

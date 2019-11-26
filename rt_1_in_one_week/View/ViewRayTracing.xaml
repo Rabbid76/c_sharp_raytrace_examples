@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:rt_1_in_one_week.View"
+        xmlns:ViewModel="clr-namespace:rt_1_in_one_week.ViewModel"
         mc:Ignorable="d"
         Title="RayTracingView" Height="500" Width="500">
+    <Window.DataContext>
+        <ViewModel:RayTraceViewModel/>
+    </Window.DataContext>
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
             <GradientStop Color="Gray"/>
@@ -13,6 +17,10 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Image x:Name="RayTraceImage" Margin="10" Grid.ColumnSpan="2" Source="{Binding RayTraceImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Image x:Name="RayTraceImage" Margin="0,0,0,30" Source="{Binding RayTraceImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Slider HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="182" Maximum="200"/>
+        <StatusBar Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" >
+            <ProgressBar Margin="10,0,10,0" Height="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Value="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+        </StatusBar>
     </Grid>
 </Window>
