@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using rt_1_in_one_week.ViewModel;
+using rt_1_in_one_week.Mathematics;
+using rt_1_in_one_week.Color;
 
 namespace rt_1_in_one_week.Model
 {
@@ -33,21 +35,28 @@ namespace rt_1_in_one_week.Model
         {
             RayTraceViewModel viewModel = obj as RayTraceViewModel;
 
-            int x = 0, y = 0;
-            System.Drawing.Color c = System.Drawing.Color.FromArgb(255, 0, 0);
+            var cx = viewModel.BitmapWidth;
+            var cy = viewModel.BitmapHeight;
 
+            int x = 0, y = 0;
+            
             bool run = true;
             while (run)
             {
-                viewModel.SetBitmapPixel(100+x, 100+y, c);
+                var fx = (double)x / cx;
+                var fy = (double)y / cy;
+                var v = new Vec3(fx, fy, (1.0 - fx) * (1.0 - fy));
+                viewModel.SetBitmapPixel(x, y, ColorFactory.Create(v));
                 x++;
-                viewModel.Progress = ((double)y * 100.0 + (double)x) / 10000.0;
-                if (x == 100)
+                viewModel.Progress = ((double)y * cx + (double)x) / (cx*cy);
+                if (x == cx)
                 {
                     y++;
                     x = 0;
                 }
-                run = y < 100;
+                run = y < cy;
+                //Thread.Yield();
+                //Thread.SpinWait(1);
                 Thread.Sleep(1);
             }
         }

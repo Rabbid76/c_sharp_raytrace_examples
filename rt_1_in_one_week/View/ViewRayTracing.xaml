@@ -17,8 +17,11 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Image x:Name="RayTraceImage" Margin="0,0,0,30" Source="{Binding RayTraceImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Slider HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="182" Maximum="200"/>
+        <ToolBar  HorizontalAlignment="Stretch" Height="40" Margin="0,0,0,0" VerticalAlignment="Top">
+            <Button x:Name="storeBitmap" Content="Save" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Command="{Binding SaveImageCommand}"/>
+        </ToolBar>
+        <Image x:Name="RayTraceImage" Margin="0,40,0,30" Stretch="Uniform" Source="{Binding RayTraceImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <!--Slider HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="182" Maximum="200"/-->
         <StatusBar Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" >
             <ProgressBar Margin="10,0,10,0" Height="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Value="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
         </StatusBar>
