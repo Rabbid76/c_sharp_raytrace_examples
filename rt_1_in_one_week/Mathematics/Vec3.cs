@@ -16,7 +16,12 @@ namespace rt_1_in_one_week.Mathematics
         public Vec3(double[] v) { _v = new double[3] { v[0], v[1], v[2] }; }
         public Vec3(Vec3 v) { _v = (double[])v._v.Clone(); }
 
-        public Vec3 Clone() { return new Vec3(_v);  }
+        public Vec3 Clone() => new Vec3(_v);
+
+        public static Vec3 Create(double val) => new Vec3(val);
+        public static Vec3 Create(double x, double y, double z) => new Vec3(x, y, z);
+        public static Vec3 Create(double[] v) => new Vec3(v);
+        public static Vec3 Create(Vec3 v) => new Vec3(v);
 
         public static Vec3 operator +(Vec3 a, double b) => new Vec3(a.X + b, a.Y + b, a.Z + b);
         public static Vec3 operator -(Vec3 a, double b) => new Vec3(a.X - b, a.Y - b, a.Z - b);
@@ -34,17 +39,19 @@ namespace rt_1_in_one_week.Mathematics
         public double LengthSquare { get => X * X + Y * Y + Z * Z; }
         public double Length { get => Sqrt(LengthSquare); }
         public Vec3 Normalize() { this /= Length; return this; }
-        public Vec3 Normalized() { return this / Length; }
-        public double DistanceToSquare(Vec3 b) { return (this - b).LengthSquare; }
-        public double DistanceTo(Vec3 b) { return (this - b).Length; }
-        public static double DistanceSquare(Vec3 a, Vec3 b) { return (a - b).LengthSquare; }
-        public static double Distance(Vec3 a, Vec3 b) { return (a - b).Length; }
+        public Vec3 Normalized() => this / Length;
+        public double DistanceToSquare(Vec3 b) => (this - b).LengthSquare;
+        public double DistanceTo(Vec3 b) => (this - b).Length;
+        static public Vec3 Normalize(Vec3 a) => a.Normalized();
+        public static double DistanceSquare(Vec3 a, Vec3 b) => (a - b).LengthSquare;
+        public static double Distance(Vec3 a, Vec3 b) => (a - b).Length;
 
         /// <summary>
         /// [Dot product](https://en.wikipedia.org/wiki/Dot_product)
         /// </summary>
-        public double Dot(Vec3 b) { return X * b.X + Y * b.Y + Z * b.Z; }
-        public static double Dot(Vec3 a, Vec3 b) { return a.X * b.X + a.Y * b.Y + a.Z * b.Z; }
+        public double Dot(Vec3 b) => X * b.X + Y * b.Y + Z * b.Z;
+        public double DotSelf() => X * X + Y * Y + Z * Z; 
+        public static double Dot(Vec3 a, Vec3 b) => a.X * b.X + a.Y * b.Y + a.Z * b.Z;
 
         /// <summary>
         /// [Cross product](https://en.wikipedia.org/wiki/Cross_product)

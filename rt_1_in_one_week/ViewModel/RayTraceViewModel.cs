@@ -18,8 +18,12 @@ namespace rt_1_in_one_week.ViewModel
     public class RayTraceViewModel
         : INotifyPropertyChanged
     {
+        static int _min_bitmap_size = 8;
+        static int _max_bitmap_size = 4096;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private RayTracingView _form;
         private RayTraceModel _rt_model = new RayTraceModel();
 
         private BitmapSource _rt_image;
@@ -28,18 +32,34 @@ namespace rt_1_in_one_week.ViewModel
         private readonly object _bitmap_lock = new object();
         private double _progress = 0.0;
         private ICommand _saveImageCommad;
+        private ICommand _applySettingsCommand;
+        private int _render_cx = 300;
+        private int _render_cy = 200;
 
         public RayTraceViewModel()
         {
-            // TODO $$$ image size
-            Bitmap bm = new Bitmap(400, 400);
-            RayTraceBitmap = bm;
-
             _saveImageCommad = new RelayCommand(SaveImage, param => true);
-
+            _applySettingsCommand = new RelayCommand(ApplySettings, param => true);
+           
             _rt_model.ViewModel = this;
-            // TODO $$$ move to command
-            _rt_model.StartRayTrace();
+
+            // TODO $$$ do not start raytracing at startup?
+            RestartRaytrace();
+        }
+
+        public RayTracingView Form
+        {
+            get => _form;
+            set
+            {
+                _form = value;
+                _form.Closing += CloseWindow;
+            }
+        }
+
+        private void CloseWindow(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _rt_model?.TerminateRayTrace();
         }
 
         protected internal void OnPropertyChanged(string propertyname)
@@ -52,6 +72,32 @@ namespace rt_1_in_one_week.ViewModel
         {
             get { return _saveImageCommad; }
             set { _saveImageCommad = value; }
+        }
+
+        public ICommand ApplySettingsCommand
+        {
+            get { return _applySettingsCommand; }
+            set { _applySettingsCommand = value; }
+        }
+
+        public string RenderWidth
+        {
+            get => _render_cx.ToString();
+            set
+            {
+                _render_cx = Int32.Parse(value);
+                this.OnPropertyChanged("RenderWidth");
+            }
+        }
+
+        public string RenderHeight
+        {
+            get => _render_cy.ToString();
+            set
+            {
+                _render_cy = Int32.Parse(value);
+                this.OnPropertyChanged("RenderHeight");
+            }
         }
 
         public ImageSource RayTraceImage
@@ -95,7 +141,7 @@ namespace rt_1_in_one_week.ViewModel
 
         private void NotifyImgeSourceChanged()
         {
-            this._rt_bitmap_valid = false; 
+            this._rt_bitmap_valid = false;
             this.OnPropertyChanged("RayTraceImage");
         }
 
@@ -134,6 +180,17 @@ namespace rt_1_in_one_week.ViewModel
             }
         }
 
+        private void RestartRaytrace()
+        {
+            _rt_model?.TerminateRayTrace();
+
+            // TODO $$$ image size
+            Bitmap bm = new Bitmap(_render_cx, _render_cy);
+            RayTraceBitmap = bm;
+
+            _rt_model?.StartRayTrace();
+        }
+
         private void SaveImage(object obj)
         {
             try
@@ -145,10 +202,17 @@ namespace rt_1_in_one_week.ViewModel
                 encoder.Frames.Add(BitmapFrame.Create(this._rt_image));
                 encoder.Save(fileStream);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // [...]
             }
+        }
+
+        private void ApplySettings(object obj)
+        {
+            RenderWidth = Math.Max(_min_bitmap_size, Math.Min(_render_cx, _max_bitmap_size)).ToString();
+            RenderHeight = Math.Max(_min_bitmap_size, Math.Min(_render_cy, _max_bitmap_size)).ToString();
+            RestartRaytrace();
         }
     }
 }

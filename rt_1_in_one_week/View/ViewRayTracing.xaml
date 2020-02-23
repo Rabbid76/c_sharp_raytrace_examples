@@ -17,12 +17,18 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <ToolBar  HorizontalAlignment="Stretch" Height="40" Margin="0,0,0,0" VerticalAlignment="Top">
-            <Button x:Name="storeBitmap" Content="Save" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Command="{Binding SaveImageCommand}"/>
-        </ToolBar>
-        <Image x:Name="RayTraceImage" Margin="0,40,0,30" Stretch="Uniform" Source="{Binding RayTraceImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <!--Slider HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="182" Maximum="200"/-->
-        <StatusBar Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="261*"/>
+            <ColumnDefinition Width="239*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Width="60" Margin="0,0,0,30"  HorizontalAlignment="Left" Background="LightGray">
+            <Button x:Name="storeBitmap" ToolTip="Save current bitmap to file" Content="Save" Width="50"  Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveImageCommand}"/>
+            <Button x:Name="applySettings" Content="Apply" ToolTip="Apply settings and restart ray traycing" Width="50"  Margin="5,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ApplySettingsCommand}"/>
+            <TextBox x:Name="txtWidth" ToolTip="Width" Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right" Text="{Binding RenderWidth}"/>
+            <TextBox x:Name="txtHeight" ToolTip="Height"  Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right" Text="{Binding RenderHeight}"/>
+        </StackPanel>
+        <Image x:Name="RayTraceImage" Margin="60,00,0,30" Stretch="Uniform" Source="{Binding RayTraceImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2"/>
+        <StatusBar Height="30" VerticalAlignment="Bottom" Grid.ColumnSpan="2" >
             <ProgressBar Margin="10,0,10,0" Height="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Value="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
         </StatusBar>
     </Grid>

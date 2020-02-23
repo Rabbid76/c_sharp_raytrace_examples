@@ -24,6 +24,8 @@ namespace rt_1_in_one_week.View
         public RayTracingView()
         {
             InitializeComponent();
+            var vm = this.DataContext as RayTraceViewModel;
+            vm.Form = this;
         }
     }
 }
