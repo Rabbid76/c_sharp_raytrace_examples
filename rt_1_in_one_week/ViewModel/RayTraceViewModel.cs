@@ -18,8 +18,9 @@ namespace rt_1_in_one_week.ViewModel
     public class RayTraceViewModel
         : INotifyPropertyChanged
     {
-        static int _min_bitmap_size = 8;
-        static int _max_bitmap_size = 4096;
+        private static RangeLimit<int> _bitmapSizeRange = new RangeLimit<int>(8, 4096);
+        private static RangeLimit<int> _samplesRange = new RangeLimit<int>(1, 10000);
+        private static RangeLimit<double> _updateRange = new RangeLimit<double>(0.01, 1.0);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,8 +34,10 @@ namespace rt_1_in_one_week.ViewModel
         private double _progress = 0.0;
         private ICommand _saveImageCommad;
         private ICommand _applySettingsCommand;
-        private int _render_cx = 300;
+        private int _render_cx = 400;
         private int _render_cy = 200;
+        private int _samples = 100;
+        private double _update_rate = 0.1;
 
         public RayTraceViewModel()
         {
@@ -68,6 +71,12 @@ namespace rt_1_in_one_week.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
         }
 
+        private void ChangeProperty<T>(string propertyname, ref T property, T value)
+        {
+            property = value;
+            OnPropertyChanged(propertyname);
+        }
+
         public ICommand SaveImageCommand
         {
             get { return _saveImageCommad; }
@@ -80,24 +89,58 @@ namespace rt_1_in_one_week.ViewModel
             set { _applySettingsCommand = value; }
         }
 
-        public string RenderWidth
+        public int RenderWidth
         {
-            get => _render_cx.ToString();
+            get => _render_cx;
             set
             {
-                _render_cx = Int32.Parse(value);
+                _render_cx = value;
                 this.OnPropertyChanged("RenderWidth");
             }
         }
 
-        public string RenderHeight
+        public int RenderHeight
         {
-            get => _render_cy.ToString();
+            get => _render_cy;
+            set => ChangeProperty("RenderHeight", ref _render_cy, value);
+        }
+
+        public int RenderSamples
+        {
+            get => _samples;
+            set => ChangeProperty("RenderSamples", ref _samples, value);
+        }
+
+        public double RenderUpdateRate
+        {
+            get => _update_rate;
             set
             {
-                _render_cy = Int32.Parse(value);
-                this.OnPropertyChanged("RenderHeight");
+                _update_rate = value;
+                this.OnPropertyChanged("RenderUpdateRate");
+                this.OnPropertyChanged("RenderUpdateRateTip");
             }
+        }
+
+        public string RenderUpdateRateTip
+        {
+            get => "Update rate " + ((int)(RenderUpdateRate * 100.0 + 0.5)).ToString() + "%";
+        }
+
+        public double Progress
+        {
+            get => _progress;
+            set
+            {
+                _progress = value * 100.0;
+                OnPropertyChanged("Progress");
+                OnPropertyChanged("ProgressTip");
+            }
+        }
+
+        public string ProgressTip
+        {
+            get => "Progress " + ((int)(_progress + 0.5)).ToString() + "%";
         }
 
         public ImageSource RayTraceImage
@@ -170,16 +213,6 @@ namespace rt_1_in_one_week.ViewModel
             }
         }
 
-        public double Progress
-        {
-            get { return _progress; }
-            set
-            {
-                _progress = value * 100.0;
-                OnPropertyChanged("Progress");
-            }
-        }
-
         private void RestartRaytrace()
         {
             _rt_model?.TerminateRayTrace();
@@ -210,8 +243,10 @@ namespace rt_1_in_one_week.ViewModel
 
         private void ApplySettings(object obj)
         {
-            RenderWidth = Math.Max(_min_bitmap_size, Math.Min(_render_cx, _max_bitmap_size)).ToString();
-            RenderHeight = Math.Max(_min_bitmap_size, Math.Min(_render_cy, _max_bitmap_size)).ToString();
+            RenderWidth = _bitmapSizeRange.Clamp(RenderWidth);
+            RenderHeight = _bitmapSizeRange.Clamp(RenderHeight);
+            RenderSamples = _samplesRange.Clamp(_samples);
+            RenderUpdateRate = _updateRange.Clamp(_update_rate);
             RestartRaytrace();
         }
     }

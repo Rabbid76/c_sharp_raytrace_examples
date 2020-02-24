@@ -22,7 +22,7 @@ namespace rt_1_in_one_week.Process
             int depth_samples =  _depth0_sample1 && depth == 0 ?
                 1 : 
                 Math.Max(_min_samples, _max_samples - depth * _depth_reduction);
-            var sampler = new DirectionSampler(depth_samples);
+            var sampler = new Sampler(depth_samples);
             return sampler;
         }
     }

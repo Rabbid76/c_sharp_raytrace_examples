@@ -41,8 +41,14 @@ namespace rt_1_in_one_week.Model
             var model = obj as RayTraceModel;
             var viewModel = model._vm;
 
+            // get current settings
             var cx = viewModel.BitmapWidth;
             var cy = viewModel.BitmapHeight;
+            var no_samples = viewModel.RenderSamples;
+            var update_rate = (double)viewModel.RenderUpdateRate;
+            int no_samples_outer = Math.Max(1, (int)(no_samples * update_rate + 0.5));
+            int no_samples_inner = (no_samples + no_samples_outer - 1) / no_samples_outer;
+
             var iterator = new IterateBufferExp2(cx, cy);
             var aspcet = (double)cx / (double)cy;
             var sampler = new Random();
@@ -54,8 +60,11 @@ namespace rt_1_in_one_week.Model
                 Vec3.Create(0, 0, 0));
 
             IHitable[] hitables = {
-                new Sphere(Vec3.Create(0, 0, -1), 0.5), 
-                new Sphere(Vec3.Create(0, -100.5, -1), 100)
+                new Sphere(Vec3.Create(0, -100.5, -1), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
+                new Sphere(Vec3.Create(0, 0, -1), 0.5, new Lambertian(Vec3.Create(0.8, 0.3, 0.3))), 
+                new Sphere(Vec3.Create(1, 0, -1), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
+                new Sphere(Vec3.Create(-1, 0, -1), 0.5, new Dielectric(1.5)),
+                new Sphere(Vec3.Create(-1, 0, -1), -0.45, new Dielectric(1.5))
             };
             var world = new HitableList(hitables);
 
@@ -64,25 +73,25 @@ namespace rt_1_in_one_week.Model
                 for (int j = 0; j < cy; ++j)
                     colFiled[i, j] = Vec3.Create(0.0);
 
-            int ns_outer = 10;
-            int ns_inner = 10;
             int x = 0, y = 0;
             int processed = 0;
-            for (int outer_i = 0; model._render && outer_i < ns_outer; ++outer_i)
+            for (int outer_i = 0; model._render && (outer_i * no_samples_inner) < no_samples; ++outer_i)
             {
                 iterator.Reset();
                 while (model._render && iterator.Next(out x, out y))
                 {
-                    for (int inner_i = 0; model._render && inner_i < ns_inner; ++inner_i)
+                    int no_start = no_samples_inner * outer_i;
+                    int no_end = Math.Min(no_samples, no_start + no_samples_inner);
+                    for (int inner_i = no_start; model._render && inner_i < no_end; ++inner_i)
                     {
                         (double dx, double dy) = ((double)x + sampler.NextDouble(), (double)y + sampler.NextDouble());
                         (double u, double v) = (dx / cx, dy / cy);
-                        colFiled[x, y] += color(cam.Get(u, v), world);
+                        colFiled[x, y] += ReytraceColor(cam.Get(u, v), world, 0);
                     }
 
-                    var col = colFiled[x, y] / ((outer_i + 1) * ns_inner);
-                    viewModel.SetBitmapPixel(x, cy - y - 1, ColorFactory.Create(col));
-                    viewModel.Progress = (double)(++processed) / (double)(cx * cy * ns_outer);
+                    var col = colFiled[x, y] / no_end;
+                    viewModel.SetBitmapPixel(x, cy - y - 1, ColorFactory.CreateSquare(col));
+                    viewModel.Progress = (double)(++processed) / (double)(cx * cy * no_samples_outer);
 
                     //Thread.Yield();
                     //Thread.SpinWait(1);
@@ -99,17 +108,20 @@ namespace rt_1_in_one_week.Model
             return v;
         }
 
-        private static Vec3 color(Ray r, IHitable hitable)
+        private static Vec3 ReytraceColor(Ray r, IHitable hitable, int depth)
         {
-            HitRecord hit_record;
-            if (hitable.Hit(r, 0.0, Double.MaxValue, out hit_record))
-                return hit_record.Normal * 0.5 + 0.5;
+            HitRecord rec;
+            if (hitable.Hit(r, 0.001, Double.MaxValue, out rec))
+            {
+                Ray scattered;
+                Vec3 attenuation;
+                if (depth < 50 && rec.Material.Scatter(r, rec, out attenuation, out scattered))
+                {
+                    return attenuation * ReytraceColor(scattered, hitable, depth + 1);
+                }
+                return Vec3.Create(0.0);
+            }
             return CreateSky(r);
         }
     }
 }
-
-// Chapter 3: Rays, a simple camera and background
-// Chapter 4: Adding a sphere 
-// Chapter 5: Surface normals and multiple objects
-// Chapter 6: Antialiasing

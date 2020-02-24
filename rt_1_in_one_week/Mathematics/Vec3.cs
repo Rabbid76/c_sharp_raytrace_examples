@@ -23,6 +23,8 @@ namespace rt_1_in_one_week.Mathematics
         public static Vec3 Create(double[] v) => new Vec3(v);
         public static Vec3 Create(Vec3 v) => new Vec3(v);
 
+        public static Vec3 operator -(Vec3 a) => new Vec3(-a.X, -a.Y, -a.Z);
+
         public static Vec3 operator +(Vec3 a, double b) => new Vec3(a.X + b, a.Y + b, a.Z + b);
         public static Vec3 operator -(Vec3 a, double b) => new Vec3(a.X - b, a.Y - b, a.Z - b);
         public static Vec3 operator *(Vec3 a, double b) => new Vec3(a.X * b, a.Y * b, a.Z * b);
@@ -63,6 +65,40 @@ namespace rt_1_in_one_week.Mathematics
                 a.Y * b.Z - a.Z * b.Y,
                 a.Z * b.X - a.X * b.Z,
                 a.X * b.Y - a.Y * b.X); 
+        }
+
+        /// <summary>
+        /// [Reflection](https://en.wikipedia.org/wiki/Reflection_(mathematics))
+        /// </summary>
+        public Vec3 Reflect(Vec3 n) { this = this - n * Dot(n) * 2; return this; }
+        public static Vec3 Reflect(Vec3 v, Vec3 n) { return v - n * Dot(v, n) * 2; }
+
+        /// <summary>
+        /// Refract [Snell's law](https://en.wikipedia.org/wiki/Snell%27s_law)
+        /// </summary>
+        public bool Refract(Vec3 n, double ni_over_nt)
+        {
+            Vec3 refracted;
+            if (Refract(this, n, ni_over_nt, out refracted))
+            {
+                this = refracted;
+                return true;
+            }
+            return false;
+        }
+
+        public static bool Refract(Vec3 v, Vec3 n, double ni_over_nt, out Vec3 refracted)
+        {
+            Vec3 uv = v.Normalized();
+            double dt = uv.Dot(n);
+            double discriminante = 1 - ni_over_nt * ni_over_nt * (1 - dt * dt);
+            if (discriminante > 0)
+            {
+                refracted = (uv - n * dt) * ni_over_nt - n * Sqrt(discriminante);
+                return true;
+            }
+            refracted = Create(0);
+            return false;
         }
     }
 }

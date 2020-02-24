@@ -9,11 +9,13 @@ namespace rt_1_in_one_week.Mathematics
     {
         Vec3 _center;
         double _radius;
+        IMaterial _material;
 
-        public Sphere(Vec3 center, double radius)
+        public Sphere(Vec3 center, double radius, IMaterial material)
         {
             _center = center;
             _radius = radius;
+            _material = material;
         }
 
         /// <summary>
@@ -37,14 +39,14 @@ namespace rt_1_in_one_week.Mathematics
                 if (t_min < temp && temp < t_max)
                 {
                     var p = r.PointAt(temp);
-                    rec = new HitRecord(temp, p, (p - _center) / _radius);
+                    rec = new HitRecord(temp, p, (p - _center) / _radius, _material);
                     return true;
                 }
                 temp = (-b + Math.Sqrt(discriminant)) / (2 * a);
                 if (t_min < temp && temp < t_max)
                 {
                     var p = r.PointAt(temp);
-                    rec = new HitRecord(temp, p, (p - _center) / _radius);
+                    rec = new HitRecord(temp, p, (p - _center) / _radius, _material);
                     return true;
                 }
             }

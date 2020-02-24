@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:rt_1_in_one_week.View"
         xmlns:ViewModel="clr-namespace:rt_1_in_one_week.ViewModel"
         mc:Ignorable="d"
-        Title="RayTracingView" Height="500" Width="500">
+        Title="RayTracingView" Height="400" Width="800">
     <Window.DataContext>
         <ViewModel:RayTraceViewModel/>
     </Window.DataContext>
@@ -17,19 +17,17 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="261*"/>
-            <ColumnDefinition Width="239*"/>
-        </Grid.ColumnDefinitions>
         <StackPanel Width="60" Margin="0,0,0,30"  HorizontalAlignment="Left" Background="LightGray">
             <Button x:Name="storeBitmap" ToolTip="Save current bitmap to file" Content="Save" Width="50"  Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding SaveImageCommand}"/>
-            <Button x:Name="applySettings" Content="Apply" ToolTip="Apply settings and restart ray traycing" Width="50"  Margin="5,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ApplySettingsCommand}"/>
-            <TextBox x:Name="txtWidth" ToolTip="Width" Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right" Text="{Binding RenderWidth}"/>
-            <TextBox x:Name="txtHeight" ToolTip="Height"  Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right" Text="{Binding RenderHeight}"/>
+            <Button x:Name="applySettings" Content="Apply" ToolTip="Apply settings and restart ray tracing" Width="50"  Margin="5,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ApplySettingsCommand}"/>
+            <TextBox x:Name="txtWidth" ToolTip="Width" Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right" Text="{Binding RenderWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtHeight" ToolTip="Height"  Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right" Text="{Binding RenderHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtSamples" ToolTip="Samples per fragment" Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" TextAlignment="Right" Text="{Binding RenderSamples, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Slider x:Name="sliUpdate" ToolTip="{Binding RenderUpdateRateTip}" Width="50" Margin="5,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Maximum="1" Value="{Binding RenderUpdateRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <Image x:Name="RayTraceImage" Margin="60,00,0,30" Stretch="Uniform" Source="{Binding RayTraceImage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="2"/>
         <StatusBar Height="30" VerticalAlignment="Bottom" Grid.ColumnSpan="2" >
-            <ProgressBar Margin="10,0,10,0" Height="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Value="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+            <ProgressBar x:Name="pgbProgress" ToolTip="{Binding ProgressTip}" Height="10" Margin="10,0,10,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Value="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
         </StatusBar>
     </Grid>
 </Window>
