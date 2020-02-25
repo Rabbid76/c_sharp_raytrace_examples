@@ -45,51 +45,126 @@ namespace rt_1_in_one_week.Model
             var cx = viewModel.BitmapWidth;
             var cy = viewModel.BitmapHeight;
             var no_samples = viewModel.RenderSamples;
-            var update_rate = (double)viewModel.RenderUpdateRate;
+            var update_rate = viewModel.RenderUpdateRate;
             int no_samples_outer = Math.Max(1, (int)(no_samples * update_rate + 0.5));
             int no_samples_inner = (no_samples + no_samples_outer - 1) / no_samples_outer;
+            var scene = Int32.Parse(viewModel.CurrentScene.Number);
 
-            var iterator = new IterateBufferExp2(cx, cy);
-            var aspcet = (double)cx / (double)cy;
+            var aspect = (double)cx / (double)cy;
             var sampler = new Random();
+            var camera = Camera.CreateByVerticalFiled(90, aspect);
+            HitableList world;
 
-            var cam = new Camera(
-                Vec3.Create(-aspcet, -1, -1),
-                Vec3.Create(2 * aspcet, 0, 0),
-                Vec3.Create(0, 2, 0),
-                Vec3.Create(0, 0, 0));
+            switch (scene)
+            {
+                default:
+                case 0:
+                    {
+                        List<IHitable> hitables = new List<IHitable>();
+                        hitables.Add(new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(Vec3.Create(0.5, 0.5, 0.5))));
+                        for (int a = -11; a < 11; ++a)
+                        {
+                            for (int b = -11; b < 11; ++b)
+                            {
+                                double choos_mat = sampler.NextDouble();
+                                Vec3 center = Vec3.Create(a + 0.9 * sampler.NextDouble(), 0.2, b + 0.9 * sampler.NextDouble());
+                                if ((center - Vec3.Create(4,0.2,0)).Length > 0.9)
+                                {
+                                    if (choos_mat < 0.8) // diffuse
+                                        hitables.Add(new Sphere(center, 0.2,
+                                            new Lambertian(Vec3.Create(sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble()))));
+                                    else if (choos_mat < 0.9) // metal
+                                        hitables.Add(new Sphere(center, 0.2,
+                                            new Metal(Vec3.Create(0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble())), 0.5 * sampler.NextDouble())));
+                                    else // glass
+                                        hitables.Add(new Sphere(center, 0.2, new Dielectric(1.5)));
+                                }
+                            }
+                        }
+                        hitables.Add(new Sphere(Vec3.Create(0, 1, 0), 1, new Dielectric(1.5)));
+                        hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(Vec3.Create(0.4, 0.2, 0.1))));
+                        hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(Vec3.Create(0.7, 0.6, 0.5), 0)));
+                        world = new HitableList(hitables.ToArray());
+                        var lookFrom = Vec3.Create(12, 2, 3);
+                        var lookAt = Vec3.Create(0, 0, 0);
+                        double dist_to_focus = 10;
+                        double aderpture = 0.1;
+                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus);
+                    }
+                    break;
 
-            IHitable[] hitables = {
-                new Sphere(Vec3.Create(0, -100.5, -1), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
-                new Sphere(Vec3.Create(0, 0, -1), 0.5, new Lambertian(Vec3.Create(0.8, 0.3, 0.3))), 
-                new Sphere(Vec3.Create(1, 0, -1), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
-                new Sphere(Vec3.Create(-1, 0, -1), 0.5, new Dielectric(1.5)),
-                new Sphere(Vec3.Create(-1, 0, -1), -0.45, new Dielectric(1.5))
-            };
-            var world = new HitableList(hitables);
+                // materials
+                case 1:
+                    {
+                        IHitable[] hitables = {
+                            new Sphere(Vec3.Create(0, -100.5, 0), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
+                            new Sphere(Vec3.Create(0, 0, 0), 0.5, new Lambertian(Vec3.Create(0.1, 0.2, 0.5))),
+                            new Sphere(Vec3.Create(1, 0, 0), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
+                            new Sphere(Vec3.Create(-1, 0, 0), 0.5, new Dielectric(1.5)),
+                            new Sphere(Vec3.Create(-1, 0, 0), -0.45, new Dielectric(1.5))
+                        };
+                        world = new HitableList(hitables);
+                        camera = Camera.CreateLookAt(Vec3.Create(0.25, 0.5, 2.2), Vec3.Create(0.1, 0.0, 0), Vec3.Create(0, 1, 0), 45, aspect, 0, 1);
+                    }
+                    break;
+
+                // defocus blur
+                case 2:
+                    {
+                        IHitable[] hitables = {
+                            new Sphere(Vec3.Create(0, -100.5, -1), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
+                            new Sphere(Vec3.Create(0, 0, -1), 0.5, new Lambertian(Vec3.Create(0.1, 0.2, 0.5))),
+                            new Sphere(Vec3.Create(1, 0, -1), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
+                            new Sphere(Vec3.Create(-1, 0, -1), 0.5, new Dielectric(1.5)),
+                            new Sphere(Vec3.Create(-1, 0, -1), -0.45, new Dielectric(1.5))
+                        };
+                        world = new HitableList(hitables);
+                        var lookFrom = Vec3.Create(3, 3, 2);
+                        var lookAt = Vec3.Create(0, 0, -1);
+                        var dist_to_focus = (lookFrom - lookAt).Length;
+                        double aderpture = 2;
+                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 25, aspect, aderpture, dist_to_focus);
+                    }
+                    break;
+
+                // test 1
+                case 3:
+                    {
+                        double R = Math.Cos(Math.PI / 4);
+                        IHitable[] hitables = {
+                            new Sphere(Vec3.Create(-R, 0, -1), R, new Lambertian(Vec3.Create(1, 0, 0))),
+                            new Sphere(Vec3.Create(R, 0, -1), R, new Lambertian(Vec3.Create(0, 0, 1)))
+                        };
+                        world = new HitableList(hitables);
+                        camera = Camera.CreateByVerticalFiled(90, aspect);
+                    }
+                    break;
+            }
 
             Vec3[,] colFiled = new Vec3[cx, cy];
             for (int i = 0; i < cx; ++i)
                 for (int j = 0; j < cy; ++j)
                     colFiled[i, j] = Vec3.Create(0.0);
 
-            int x = 0, y = 0;
             int processed = 0;
             for (int outer_i = 0; model._render && (outer_i * no_samples_inner) < no_samples; ++outer_i)
             {
-                iterator.Reset();
-                while (model._render && iterator.Next(out x, out y))
+                foreach ((int x, int y) in new IterateBufferExp2(cx, cy))
                 {
+                    if (model._render == false)
+                        break;
+
                     int no_start = no_samples_inner * outer_i;
                     int no_end = Math.Min(no_samples, no_start + no_samples_inner);
                     for (int inner_i = no_start; model._render && inner_i < no_end; ++inner_i)
                     {
                         (double dx, double dy) = ((double)x + sampler.NextDouble(), (double)y + sampler.NextDouble());
                         (double u, double v) = (dx / cx, dy / cy);
-                        colFiled[x, y] += ReytraceColor(cam.Get(u, v), world, 0);
+                        var sampleColor = RaytraceColor(camera.Get(u, v), world, 0);
+                        colFiled[x, y] = (colFiled[x, y] * inner_i + sampleColor) / (inner_i + 1);
                     }
 
-                    var col = colFiled[x, y] / no_end;
+                    var col = colFiled[x, y];
                     viewModel.SetBitmapPixel(x, cy - y - 1, ColorFactory.CreateSquare(col));
                     viewModel.Progress = (double)(++processed) / (double)(cx * cy * no_samples_outer);
 
@@ -108,7 +183,7 @@ namespace rt_1_in_one_week.Model
             return v;
         }
 
-        private static Vec3 ReytraceColor(Ray r, IHitable hitable, int depth)
+        private static Vec3 RaytraceColor(Ray r, IHitable hitable, int depth)
         {
             HitRecord rec;
             if (hitable.Hit(r, 0.001, Double.MaxValue, out rec))
@@ -117,7 +192,7 @@ namespace rt_1_in_one_week.Model
                 Vec3 attenuation;
                 if (depth < 50 && rec.Material.Scatter(r, rec, out attenuation, out scattered))
                 {
-                    return attenuation * ReytraceColor(scattered, hitable, depth + 1);
+                    return attenuation * RaytraceColor(scattered, hitable, depth + 1);
                 }
                 return Vec3.Create(0.0);
             }

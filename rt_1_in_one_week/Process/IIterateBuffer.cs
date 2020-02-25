@@ -1,8 +1,9 @@
-﻿namespace rt_1_in_one_week.Process
+﻿using System.Collections.Generic;
+
+namespace rt_1_in_one_week.Process
 {
-    interface IIterateBuffer
+    interface IIterateBuffer 
     {
-        bool Next(out int x, out int y);
-        void Reset();
+        public IEnumerator<(int, int)> GetEnumerator();
     }
 }

@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ray_tracing_modules\ray_tracing_modules.csproj" />
     <ProjectReference Include="..\WpfViewModelModule\WpfViewModelModule.csproj" />
   </ItemGroup>
 

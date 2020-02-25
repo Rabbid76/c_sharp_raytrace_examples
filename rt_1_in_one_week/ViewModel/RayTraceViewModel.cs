@@ -9,9 +9,11 @@ using System.Drawing;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
+using Microsoft.Win32;
 using rt_1_in_one_week.View;
 using rt_1_in_one_week.Model;
-using WpfViewModelModule;
+using WpfViewModelModule.Utility;
+using WpfViewModelModule.ControlData;
 
 namespace rt_1_in_one_week.ViewModel
 {
@@ -31,19 +33,42 @@ namespace rt_1_in_one_week.ViewModel
         private Bitmap _rt_bitmap;
         private bool _rt_bitmap_valid = false;
         private readonly object _bitmap_lock = new object();
-        private double _progress = 0.0;
         private ICommand _saveImageCommad;
         private ICommand _applySettingsCommand;
-        private int _render_cx = 400;
-        private int _render_cy = 200;
-        private int _samples = 100;
-        private double _update_rate = 0.1;
+        private PropertyUpdate<List<SceneEntry>> _scenes;
+        private PropertyUpdate<SceneEntry> _currentScene;
+        private PropertyUpdate<int> _render_cx;
+        private PropertyUpdate<int> _render_cy;
+        private PropertyUpdate<int> _samples;
+        private PropertyUpdate<double> _update_rate;
+        private PropertyUpdate<double> _progress;
+        
+        public class SceneEntry
+        : ComboBoxUpdate
+        {
+            public SceneEntry() : base(nameof(Scenes)) { }
+            public SceneEntry(string text, string number) : base(nameof(Scenes), text, number) { }
+        }
 
         public RayTraceViewModel()
         {
+            List<SceneEntry> scenes = new List<SceneEntry>();
+            scenes.Add(new SceneEntry("Cover scene", "0"));
+            scenes.Add(new SceneEntry("Materials", "1"));
+            scenes.Add(new SceneEntry("Defocus Blur", "2"));
+            scenes.Add(new SceneEntry("Test 1", "3"));
+
+            _scenes = new PropertyUpdate<List<SceneEntry>>(scenes, nameof(Scenes), OnPropertyChanged );
+            _currentScene = new PropertyUpdate<SceneEntry>(scenes[0], nameof(CurrentScene), OnPropertyChanged );
+            _render_cx = new PropertyUpdate<int>(400, nameof(RenderWidth), OnPropertyChanged );
+            _render_cy = new PropertyUpdate<int>(200, nameof(RenderHeight), OnPropertyChanged );
+            _samples = new PropertyUpdate<int>(100, nameof(RenderSamples), OnPropertyChanged );
+            _update_rate = new PropertyUpdate<double>(0.1, nameof(RenderUpdateRate), (string name) => { OnPropertyChanged(name); OnPropertyChanged(nameof(RenderUpdateRateTip)); });
+            _progress = new PropertyUpdate<double>(0.0, nameof(Progress), (string name) => { OnPropertyChanged(name); OnPropertyChanged(nameof(ProgressTip)); });
+           
             _saveImageCommad = new RelayCommand(SaveImage, param => true);
             _applySettingsCommand = new RelayCommand(ApplySettings, param => true);
-           
+
             _rt_model.ViewModel = this;
 
             // TODO $$$ do not start raytracing at startup?
@@ -71,77 +96,17 @@ namespace rt_1_in_one_week.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
         }
 
-        private void ChangeProperty<T>(string propertyname, ref T property, T value)
-        {
-            property = value;
-            OnPropertyChanged(propertyname);
-        }
-
-        public ICommand SaveImageCommand
-        {
-            get { return _saveImageCommad; }
-            set { _saveImageCommad = value; }
-        }
-
-        public ICommand ApplySettingsCommand
-        {
-            get { return _applySettingsCommand; }
-            set { _applySettingsCommand = value; }
-        }
-
-        public int RenderWidth
-        {
-            get => _render_cx;
-            set
-            {
-                _render_cx = value;
-                this.OnPropertyChanged("RenderWidth");
-            }
-        }
-
-        public int RenderHeight
-        {
-            get => _render_cy;
-            set => ChangeProperty("RenderHeight", ref _render_cy, value);
-        }
-
-        public int RenderSamples
-        {
-            get => _samples;
-            set => ChangeProperty("RenderSamples", ref _samples, value);
-        }
-
-        public double RenderUpdateRate
-        {
-            get => _update_rate;
-            set
-            {
-                _update_rate = value;
-                this.OnPropertyChanged("RenderUpdateRate");
-                this.OnPropertyChanged("RenderUpdateRateTip");
-            }
-        }
-
-        public string RenderUpdateRateTip
-        {
-            get => "Update rate " + ((int)(RenderUpdateRate * 100.0 + 0.5)).ToString() + "%";
-        }
-
-        public double Progress
-        {
-            get => _progress;
-            set
-            {
-                _progress = value * 100.0;
-                OnPropertyChanged("Progress");
-                OnPropertyChanged("ProgressTip");
-            }
-        }
-
-        public string ProgressTip
-        {
-            get => "Progress " + ((int)(_progress + 0.5)).ToString() + "%";
-        }
+        public ICommand SaveImageCommand { get => _saveImageCommad; set => _saveImageCommad = value; }
+        public ICommand ApplySettingsCommand { get => _applySettingsCommand; set => _applySettingsCommand = value; }
+        public List<SceneEntry> Scenes { get => _scenes; set => _scenes.Set(value); } 
+        public SceneEntry CurrentScene { get => _currentScene; set => _currentScene.Set(value); }
+        public int RenderWidth { get => _render_cx; set => _render_cx.Set(value); }
+        public int RenderHeight { get => _render_cy; set => _render_cy.Set(value); }
+        public int RenderSamples { get => _samples; set => _samples.Set(value); }
+        public double RenderUpdateRate { get => _update_rate; set => _update_rate.Set(value); }
+        public string RenderUpdateRateTip { get => "Update rate " + ((int)(RenderUpdateRate * 100.0 + 0.5)).ToString() + "%"; }
+        public double Progress { get => _progress; set => _progress.Set(value); }
+        public string ProgressTip { get => "Progress " + ((int)(_progress * 100.0 + 0.5)).ToString() + "%"; }
 
         public ImageSource RayTraceImage
         {
@@ -217,7 +182,6 @@ namespace rt_1_in_one_week.ViewModel
         {
             _rt_model?.TerminateRayTrace();
 
-            // TODO $$$ image size
             Bitmap bm = new Bitmap(_render_cx, _render_cy);
             RayTraceBitmap = bm;
 
@@ -228,12 +192,21 @@ namespace rt_1_in_one_week.ViewModel
         {
             try
             {
-                // TODO $$$ file open dialog
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Png Image|*.png";
+                saveFileDialog.Title = "Save current rendering to image file";
+                saveFileDialog.FileName = @"test.png";
+                saveFileDialog.InitialDirectory = @"c:\temp";
+                bool? ret = saveFileDialog.ShowDialog();
 
-                var fileStream = new FileStream(@"c:\temp\test.png", FileMode.Create);
-                BitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(this._rt_image));
-                encoder.Save(fileStream);
+                if (ret.HasValue && ret.Value && saveFileDialog.FileName != "")
+                {
+                    var fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create);
+                    BitmapEncoder encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(this._rt_image));
+                    encoder.Save(fileStream);
+                    fileStream.Close();
+                }
             }
             catch (Exception)
             {
@@ -245,8 +218,8 @@ namespace rt_1_in_one_week.ViewModel
         {
             RenderWidth = _bitmapSizeRange.Clamp(RenderWidth);
             RenderHeight = _bitmapSizeRange.Clamp(RenderHeight);
-            RenderSamples = _samplesRange.Clamp(_samples);
-            RenderUpdateRate = _updateRange.Clamp(_update_rate);
+            RenderSamples = _samplesRange.Clamp(RenderSamples);
+            RenderUpdateRate = _updateRange.Clamp(RenderUpdateRate);
             RestartRaytrace();
         }
     }
