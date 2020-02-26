@@ -3,8 +3,7 @@
 
 ## Ray Tracing in One Weekend
 
-Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) book   
-["Ray Tracing in One Weekend (Ray Tracing Minibooks Book 1)"](https://www.goodreads.com/book/show/28794030-ray-tracing-in-one-weekend)
+Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) book ["Ray Tracing in One Weekend (Ray Tracing Minibooks Book 1)"](https://www.goodreads.com/book/show/28794030-ray-tracing-in-one-weekend)
 
 ### Materials: Diffuse, Metal, Dielectrics
 

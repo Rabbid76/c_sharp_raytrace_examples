@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using rt_1_in_one_week.ViewModel;
-using rt_1_in_one_week.Mathematics;
-using rt_1_in_one_week.Color;
-using rt_1_in_one_week.Process;
+using rt_2_the_next_week.ViewModel;
+using rt_2_the_next_week.Mathematics;
+using rt_2_the_next_week.Color;
+using rt_2_the_next_week.Process;
 
-namespace rt_1_in_one_week.Model
+namespace rt_2_the_next_week.Model
 {
     public class RayTraceModel
     {
@@ -58,6 +58,8 @@ namespace rt_1_in_one_week.Model
             switch (scene)
             {
                 default:
+
+                // cover scene 1
                 case 0:
                     {
                         List<IHitable> hitables = new List<IHitable>();
@@ -90,6 +92,44 @@ namespace rt_1_in_one_week.Model
                         double dist_to_focus = 10;
                         double aderpture = 0.1;
                         camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus);
+                    }
+                    break;
+
+                // cover scene 1 motion
+                case 4:
+                    {
+                        List<IHitable> hitables = new List<IHitable>();
+                        hitables.Add(new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(Vec3.Create(0.5, 0.5, 0.5))));
+                        for (int a = -11; a < 11; ++a)
+                        {
+                            for (int b = -11; b < 11; ++b)
+                            {
+                                double choos_mat = sampler.NextDouble();
+                                Vec3 center = Vec3.Create(a + 0.9 * sampler.NextDouble(), 0.2, b + 0.9 * sampler.NextDouble());
+                                if ((center - Vec3.Create(4, 0.2, 0)).Length > 0.9)
+                                {
+                                    if (choos_mat < 0.8) // diffuse
+                                    {
+                                        hitables.Add(new MovingSphere(center, center + Vec3.Create(0, 0.5, 0) * sampler.NextDouble(), 0, 1, 0.2,
+                                            new Lambertian(Vec3.Create(sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble()))));
+                                    }
+                                    else if (choos_mat < 0.9) // metal
+                                        hitables.Add(new Sphere(center, 0.2,
+                                            new Metal(Vec3.Create(0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble())), 0.5 * sampler.NextDouble())));
+                                    else // glass
+                                        hitables.Add(new Sphere(center, 0.2, new Dielectric(1.5)));
+                                }
+                            }
+                        }
+                        hitables.Add(new Sphere(Vec3.Create(0, 1, 0), 1, new Dielectric(1.5)));
+                        hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(Vec3.Create(0.4, 0.2, 0.1))));
+                        hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(Vec3.Create(0.7, 0.6, 0.5), 0)));
+                        world = new HitableList(hitables.ToArray());
+                        var lookFrom = Vec3.Create(12, 2, 3);
+                        var lookAt = Vec3.Create(0, 0, 0);
+                        double dist_to_focus = 10;
+                        double aderpture = 0.1;
+                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus, 0, 1);
                     }
                     break;
 

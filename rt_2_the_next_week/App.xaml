@@ -1,0 +1,9 @@
+﻿<Application x:Class="rt_2_the_next_week.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:rt_2_the_next_week"
+             StartupUri="View/ViewRayTracing.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

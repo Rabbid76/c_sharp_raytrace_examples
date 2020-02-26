@@ -1,6 +1,6 @@
 ﻿using static System.Math;
 
-namespace rt_1_in_one_week.Mathematics
+namespace rt_2_the_next_week.Mathematics
 {
     public struct Vec3
     {
