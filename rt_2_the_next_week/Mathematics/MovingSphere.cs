@@ -24,6 +24,17 @@ namespace rt_2_the_next_week.Mathematics
             _material = material;
         }
 
+        public bool BoundingBox(double t0, double t1, out AABB box)
+        {
+            var cpt0 = Center(t0);
+            var cpt1 = Center(t1);
+            var vrad = Vec3.Create(_radius);
+            var boxt0 = new AABB(cpt0 - vrad, cpt0 + vrad);
+            var boxt1 = new AABB(cpt1 - vrad, cpt1 + vrad);
+            box = boxt0 | boxt1;
+            return true;
+        }
+
         /// <summary>
         /// Ray - Sphere intersection
         /// 

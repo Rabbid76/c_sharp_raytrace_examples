@@ -12,6 +12,29 @@ namespace rt_2_the_next_week.Mathematics
             _list = new List<IHitable>(hitables);
         }
 
+        public bool BoundingBox(double t0, double t1, out AABB box)
+        {
+            if (_list.Count <= 0)
+            {
+                box = null;
+                return false;
+            }
+
+            if (!_list[0].BoundingBox(t0, t1, out box))
+                return false;
+            
+            if (_list.Count == 1)
+                return true;
+            for (int i = 1; i < _list.Count; ++i)
+            {
+                AABB tempbox;
+                if (!_list[i].BoundingBox(t0, t1, out tempbox))
+                    return false;
+                box |= tempbox;
+            }
+            return true;
+        }
+
         public bool Hit(Ray r, double t_min, double t_max, out HitRecord rec)
         {
             rec = null;

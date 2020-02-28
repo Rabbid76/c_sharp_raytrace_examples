@@ -12,11 +12,19 @@ namespace rt_2_the_next_week.Mathematics
         double _radius;
         IMaterial _material;
 
+        Vec3 Center { get => Vec3.Create(_cptx, _cpty, _cptz); }
+        
         public Sphere(Vec3 center, double radius, IMaterial material)
         {
             (_cptx, _cpty, _cptz) = center.Components;
             _radius = radius;
             _material = material;
+        }
+
+        public bool BoundingBox(double t0, double t1, out AABB box)
+        {
+            box = new AABB(Center - Vec3.Create(_radius), Center + Vec3.Create(_radius));
+            return true;
         }
 
         /// <summary>

@@ -53,7 +53,7 @@ namespace rt_2_the_next_week.Model
             var aspect = (double)cx / (double)cy;
             var sampler = new Random();
             var camera = Camera.CreateByVerticalFiled(90, aspect);
-            HitableList world;
+            IHitable world;
 
             switch (scene)
             {
@@ -86,7 +86,7 @@ namespace rt_2_the_next_week.Model
                         hitables.Add(new Sphere(Vec3.Create(0, 1, 0), 1, new Dielectric(1.5)));
                         hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(Vec3.Create(0.4, 0.2, 0.1))));
                         hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(Vec3.Create(0.7, 0.6, 0.5), 0)));
-                        world = new HitableList(hitables.ToArray());
+                        world = new BVHNode(hitables.ToArray(), 0, 0);
                         var lookFrom = Vec3.Create(12, 2, 3);
                         var lookAt = Vec3.Create(0, 0, 0);
                         double dist_to_focus = 10;
@@ -124,12 +124,14 @@ namespace rt_2_the_next_week.Model
                         hitables.Add(new Sphere(Vec3.Create(0, 1, 0), 1, new Dielectric(1.5)));
                         hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(Vec3.Create(0.4, 0.2, 0.1))));
                         hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(Vec3.Create(0.7, 0.6, 0.5), 0)));
-                        world = new HitableList(hitables.ToArray());
+                        double time0 = 0;
+                        double time1 = 1;
+                        world = new BVHNode(hitables.ToArray(), time0, time1);
                         var lookFrom = Vec3.Create(12, 2, 3);
                         var lookAt = Vec3.Create(0, 0, 0);
                         double dist_to_focus = 10;
                         double aderpture = 0.1;
-                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus, 0, 1);
+                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus, time0, time1);
                     }
                     break;
 
@@ -143,7 +145,7 @@ namespace rt_2_the_next_week.Model
                             new Sphere(Vec3.Create(-1, 0, 0), 0.5, new Dielectric(1.5)),
                             new Sphere(Vec3.Create(-1, 0, 0), -0.45, new Dielectric(1.5))
                         };
-                        world = new HitableList(hitables);
+                        world = new BVHNode(hitables, 0, 1);
                         camera = Camera.CreateLookAt(Vec3.Create(0.25, 0.5, 2.2), Vec3.Create(0.1, 0.0, 0), Vec3.Create(0, 1, 0), 45, aspect, 0, 1);
                     }
                     break;
@@ -158,7 +160,7 @@ namespace rt_2_the_next_week.Model
                             new Sphere(Vec3.Create(-1, 0, -1), 0.5, new Dielectric(1.5)),
                             new Sphere(Vec3.Create(-1, 0, -1), -0.45, new Dielectric(1.5))
                         };
-                        world = new HitableList(hitables);
+                        world = new BVHNode(hitables, 0, 1);
                         var lookFrom = Vec3.Create(3, 3, 2);
                         var lookAt = Vec3.Create(0, 0, -1);
                         var dist_to_focus = (lookFrom - lookAt).Length;
@@ -175,7 +177,7 @@ namespace rt_2_the_next_week.Model
                             new Sphere(Vec3.Create(-R, 0, -1), R, new Lambertian(Vec3.Create(1, 0, 0))),
                             new Sphere(Vec3.Create(R, 0, -1), R, new Lambertian(Vec3.Create(0, 0, 1)))
                         };
-                        world = new HitableList(hitables);
+                        world = new BVHNode(hitables, 0, 1);
                         camera = Camera.CreateByVerticalFiled(90, aspect);
                     }
                     break;
