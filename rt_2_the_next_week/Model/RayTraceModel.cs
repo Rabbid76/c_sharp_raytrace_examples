@@ -63,29 +63,29 @@ namespace rt_2_the_next_week.Model
                 case 0:
                     {
                         List<IHitable> hitables = new List<IHitable>();
-                        hitables.Add(new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(Vec3.Create(0.5, 0.5, 0.5))));
+                        hitables.Add(new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(ConstantTexture.Create(0.5, 0.5, 0.5))));
                         for (int a = -11; a < 11; ++a)
                         {
                             for (int b = -11; b < 11; ++b)
                             {
                                 double choos_mat = sampler.NextDouble();
                                 Vec3 center = Vec3.Create(a + 0.9 * sampler.NextDouble(), 0.2, b + 0.9 * sampler.NextDouble());
-                                if ((center - Vec3.Create(4,0.2,0)).Length > 0.9)
+                                if ((center - Vec3.Create(4, 0.2, 0)).Length > 0.9)
                                 {
                                     if (choos_mat < 0.8) // diffuse
                                         hitables.Add(new Sphere(center, 0.2,
-                                            new Lambertian(Vec3.Create(sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble()))));
+                                            new Lambertian(ConstantTexture.Create(sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble()))));
                                     else if (choos_mat < 0.9) // metal
                                         hitables.Add(new Sphere(center, 0.2,
-                                            new Metal(Vec3.Create(0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble())), 0.5 * sampler.NextDouble())));
+                                            new Metal(ConstantTexture.Create(0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble())), 0.5 * sampler.NextDouble())));
                                     else // glass
                                         hitables.Add(new Sphere(center, 0.2, new Dielectric(1.5)));
                                 }
                             }
                         }
                         hitables.Add(new Sphere(Vec3.Create(0, 1, 0), 1, new Dielectric(1.5)));
-                        hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(Vec3.Create(0.4, 0.2, 0.1))));
-                        hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(Vec3.Create(0.7, 0.6, 0.5), 0)));
+                        hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(ConstantTexture.Create(0.4, 0.2, 0.1))));
+                        hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(ConstantTexture.Create(0.7, 0.6, 0.5), 0)));
                         world = new BVHNode(hitables.ToArray(), 0, 0);
                         var lookFrom = Vec3.Create(12, 2, 3);
                         var lookAt = Vec3.Create(0, 0, 0);
@@ -99,7 +99,7 @@ namespace rt_2_the_next_week.Model
                 case 4:
                     {
                         List<IHitable> hitables = new List<IHitable>();
-                        hitables.Add(new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(Vec3.Create(0.5, 0.5, 0.5))));
+                        hitables.Add(new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(CheckerTexture.Create(0.2, 0.3, 0.1, 0.9, 0.9, 0.9))));
                         for (int a = -11; a < 11; ++a)
                         {
                             for (int b = -11; b < 11; ++b)
@@ -111,19 +111,19 @@ namespace rt_2_the_next_week.Model
                                     if (choos_mat < 0.8) // diffuse
                                     {
                                         hitables.Add(new MovingSphere(center, center + Vec3.Create(0, 0.5, 0) * sampler.NextDouble(), 0, 1, 0.2,
-                                            new Lambertian(Vec3.Create(sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble()))));
+                                            new Lambertian(ConstantTexture.Create(sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble()))));
                                     }
                                     else if (choos_mat < 0.9) // metal
                                         hitables.Add(new Sphere(center, 0.2,
-                                            new Metal(Vec3.Create(0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble())), 0.5 * sampler.NextDouble())));
+                                            new Metal(ConstantTexture.Create(0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble())), 0.5 * sampler.NextDouble())));
                                     else // glass
                                         hitables.Add(new Sphere(center, 0.2, new Dielectric(1.5)));
                                 }
                             }
                         }
                         hitables.Add(new Sphere(Vec3.Create(0, 1, 0), 1, new Dielectric(1.5)));
-                        hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(Vec3.Create(0.4, 0.2, 0.1))));
-                        hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(Vec3.Create(0.7, 0.6, 0.5), 0)));
+                        hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(ConstantTexture.Create(0.4, 0.2, 0.1))));
+                        hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(ConstantTexture.Create(0.7, 0.6, 0.5), 0)));
                         double time0 = 0;
                         double time1 = 1;
                         world = new BVHNode(hitables.ToArray(), time0, time1);
@@ -139,9 +139,9 @@ namespace rt_2_the_next_week.Model
                 case 1:
                     {
                         IHitable[] hitables = {
-                            new Sphere(Vec3.Create(0, -100.5, 0), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
-                            new Sphere(Vec3.Create(0, 0, 0), 0.5, new Lambertian(Vec3.Create(0.1, 0.2, 0.5))),
-                            new Sphere(Vec3.Create(1, 0, 0), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
+                            new Sphere(Vec3.Create(0, -100.5, 0), 100, new Lambertian(ConstantTexture.Create(0.8, 0.8, 0.0))),
+                            new Sphere(Vec3.Create(0, 0, 0), 0.5, new Lambertian(ConstantTexture.Create(0.1, 0.2, 0.5))),
+                            new Sphere(Vec3.Create(1, 0, 0), 0.5, new Metal(ConstantTexture.Create(0.8, 0.6, 0.2), 0.3)),
                             new Sphere(Vec3.Create(-1, 0, 0), 0.5, new Dielectric(1.5)),
                             new Sphere(Vec3.Create(-1, 0, 0), -0.45, new Dielectric(1.5))
                         };
@@ -154,9 +154,9 @@ namespace rt_2_the_next_week.Model
                 case 2:
                     {
                         IHitable[] hitables = {
-                            new Sphere(Vec3.Create(0, -100.5, -1), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
-                            new Sphere(Vec3.Create(0, 0, -1), 0.5, new Lambertian(Vec3.Create(0.1, 0.2, 0.5))),
-                            new Sphere(Vec3.Create(1, 0, -1), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
+                            new Sphere(Vec3.Create(0, -100.5, -1), 100, new Lambertian(ConstantTexture.Create(0.8, 0.8, 0.0))),
+                            new Sphere(Vec3.Create(0, 0, -1), 0.5, new Lambertian(ConstantTexture.Create(0.1, 0.2, 0.5))),
+                            new Sphere(Vec3.Create(1, 0, -1), 0.5, new Metal(ConstantTexture.Create(0.8, 0.6, 0.2), 0.3)),
                             new Sphere(Vec3.Create(-1, 0, -1), 0.5, new Dielectric(1.5)),
                             new Sphere(Vec3.Create(-1, 0, -1), -0.45, new Dielectric(1.5))
                         };
@@ -174,11 +174,28 @@ namespace rt_2_the_next_week.Model
                     {
                         double R = Math.Cos(Math.PI / 4);
                         IHitable[] hitables = {
-                            new Sphere(Vec3.Create(-R, 0, -1), R, new Lambertian(Vec3.Create(1, 0, 0))),
-                            new Sphere(Vec3.Create(R, 0, -1), R, new Lambertian(Vec3.Create(0, 0, 1)))
+                            new Sphere(Vec3.Create(-R, 0, -1), R, new Lambertian(ConstantTexture.Create(1, 0, 0))),
+                            new Sphere(Vec3.Create(R, 0, -1), R, new Lambertian(ConstantTexture.Create(0, 0, 1)))
                         };
                         world = new BVHNode(hitables, 0, 1);
                         camera = Camera.CreateByVerticalFiled(90, aspect);
+                    }
+                    break;
+
+                // texture
+                case 5:
+                    {
+                        var checker_texture = CheckerTexture.Create(0.2, 0.3, 0.2, 0.9, 0.9, 0.9);
+                        IHitable[] hitables = {
+                            new Sphere(Vec3.Create(0, -10, 0), 10, new Lambertian(checker_texture)),
+                            new Sphere(Vec3.Create(0, 10, 0), 10, new Lambertian(checker_texture))
+                        };
+                        world = new BVHNode(hitables, 0, 1);
+                        var lookFrom = Vec3.Create(13, 2, 3);
+                        var lookAt = Vec3.Create(0, 0, 0);
+                        double dist_to_focus = 10;
+                        double aderpture = 0;
+                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus);
                     }
                     break;
             }

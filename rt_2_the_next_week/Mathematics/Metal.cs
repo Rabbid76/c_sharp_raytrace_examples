@@ -3,12 +3,12 @@
     public class Metal
         : IMaterial
     {
-        private Vec3 _albedo;
+        private ITexture _albedo;
         private double _fuzz;
 
-        public Metal(Vec3 albedo, double fuzz)
+        public Metal(ITexture albedo, double fuzz)
         {
-            _albedo = albedo;
+            _albedo = albedo != null ? albedo : new ConstantTexture(Vec3.Create(1));
             _fuzz = fuzz;
         }
 
@@ -16,7 +16,7 @@
         {
             Vec3 redflected = Vec3.Reflect(r_in.Direction.Normalized(), rec.Normal);
             scattered = new Ray(rec.P, redflected + Sample.RandomInUnitSphere() * _fuzz, r_in.Time);
-            attenuation = _albedo;
+            attenuation = _albedo.Value(0, 0, rec.P);
             return scattered.Direction.Dot(rec.Normal) > 0.0;
         }
     }

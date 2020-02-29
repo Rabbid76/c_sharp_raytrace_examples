@@ -1,5 +1,4 @@
-﻿using System;
-namespace rt_2_the_next_week.Mathematics
+﻿namespace rt_2_the_next_week.Mathematics
 {
     public interface IMaterial
     {
