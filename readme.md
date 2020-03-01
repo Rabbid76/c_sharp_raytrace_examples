@@ -3,9 +3,12 @@
 # Ray Tracing in C#
 (.NET Core, WPF)
 
-## Ray Tracing in One Weekend
+Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) books: 
+- ["Ray Tracing in One Weekend (Ray Tracing Minibooks Book 1)"](https://www.goodreads.com/book/show/28794030-ray-tracing-in-one-weekend)
+- ["Ray Tracing: the Next Week (Ray Tracing Minibooks Book 2)"](https://www.amazon.com/Ray-Tracing-Weekend-Minibooks-Book-ebook/dp/B01B5AODD8).
 
-Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) book ["Ray Tracing in One Weekend (Ray Tracing Minibooks Book 1)"](https://www.goodreads.com/book/show/28794030-ray-tracing-in-one-weekend)
+
+## Ray Tracing in One Weekend
 
 ### Materials: Diffuse, Metal, Dielectrics
 
@@ -15,9 +18,20 @@ Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) boo
 
 ![defocus blur](documentation/image/rt_1_in_one_week/defocus_blur.png)
 
-### Cover scene
+### Cover Scene
 
 ![cover scene](documentation/image/rt_1_in_one_week/cover_scene.png)
+
+
+## "Ray Tracing the Next Week
+
+### Motion Blur
+
+![cover scene](documentation/image/rt_2_the_next_week/cover_scene_1_motion.png)
+
+### Noise Texture
+
+![cover scene](documentation/image/rt_2_the_next_week/noise_texture_marble.png)
 
 ---
 

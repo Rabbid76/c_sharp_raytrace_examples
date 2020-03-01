@@ -182,13 +182,30 @@ namespace rt_2_the_next_week.Model
                     }
                     break;
 
-                // texture
+                // checker texture
                 case 5:
                     {
                         var checker_texture = CheckerTexture.Create(0.2, 0.3, 0.2, 0.9, 0.9, 0.9);
                         IHitable[] hitables = {
                             new Sphere(Vec3.Create(0, -10, 0), 10, new Lambertian(checker_texture)),
                             new Sphere(Vec3.Create(0, 10, 0), 10, new Lambertian(checker_texture))
+                        };
+                        world = new BVHNode(hitables, 0, 1);
+                        var lookFrom = Vec3.Create(13, 2, 3);
+                        var lookAt = Vec3.Create(0, 0, 0);
+                        double dist_to_focus = 10;
+                        double aderpture = 0;
+                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus);
+                    }
+                    break;
+
+                // noise texture
+                case 6:
+                    {
+                        var perlin_texture = NoiseTexture.Create(2, NoiseTexture.Type.SIN_Z);
+                        IHitable[] hitables = {
+                            new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(perlin_texture)),
+                            new Sphere(Vec3.Create(0, 2, 0), 2, new Lambertian(perlin_texture))
                         };
                         world = new BVHNode(hitables, 0, 1);
                         var lookFrom = Vec3.Create(13, 2, 3);
