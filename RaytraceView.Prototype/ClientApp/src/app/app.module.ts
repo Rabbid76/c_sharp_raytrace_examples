@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 //import { CounterComponent } from './counter/counter.component';
 //import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { AboutComponent } from './about/about.component';
+import { Rt1InOneWeekendComponent } from './rt1_in_one_weekend/rt1_in_one_weekend.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { AboutComponent } from './about/about.component';
     HomeComponent,
     //CounterComponent,
     //FetchDataComponent,
+    Rt1InOneWeekendComponent,
     AboutComponent
   ],
   imports: [
@@ -28,6 +30,7 @@ import { AboutComponent } from './about/about.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       //{ path: 'counter', component: CounterComponent },
       //{ path: 'fetch-data', component: FetchDataComponent },
+      { path: 'rt1_in_one_weekend', component: Rt1InOneWeekendComponent },
       { path: 'about', component: AboutComponent },
     ])
   ],
