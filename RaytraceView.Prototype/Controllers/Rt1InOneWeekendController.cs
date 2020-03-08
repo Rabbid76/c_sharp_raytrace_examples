@@ -19,9 +19,9 @@ namespace RaytraceView.Prototype.Controllers
     }
 
     [HttpGet]
-    public Rt1InOneWeekend Get()
+    public ViewModel.Rt1InOneWeekend Get()
     {
-      return new Rt1InOneWeekend { Title = "Ray Tracing in One Weekend" };
+      return new ViewModel.Rt1InOneWeekend { Title = "Ray Tracing in One Weekend" };
     }
   }
 }

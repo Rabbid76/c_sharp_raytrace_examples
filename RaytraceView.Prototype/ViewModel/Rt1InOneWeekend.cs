@@ -1,4 +1,4 @@
-﻿namespace RaytraceView.Prototype
+﻿namespace RaytraceView.Prototype.ViewModel
 {
   public class Rt1InOneWeekend
   {
