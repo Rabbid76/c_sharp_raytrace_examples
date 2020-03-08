@@ -45,7 +45,7 @@ namespace rt_2_the_next_week.Mathematics
             double accum = 0;
             Vec3 temp_p = p.Clone();
             double weight = 1.0;
-            for (int i = 0; i < weight; ++i)
+            for (int i = 0; i < depth; ++i)
             {
                 accum += weight * Noise(temp_p);
                 weight *= 0.5;

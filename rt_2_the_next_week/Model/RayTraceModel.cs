@@ -202,7 +202,7 @@ namespace rt_2_the_next_week.Model
                 // noise texture
                 case 6:
                     {
-                        var perlin_texture = NoiseTexture.Create(2, NoiseTexture.Type.SIN_Z);
+                        var perlin_texture = NoiseTexture.Create(1, NoiseTexture.Type.SIN_Z);
                         IHitable[] hitables = {
                             new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(perlin_texture)),
                             new Sphere(Vec3.Create(0, 2, 0), 2, new Lambertian(perlin_texture))

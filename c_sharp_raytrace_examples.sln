@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfViewModelModule", "WpfVi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rt_2_the_next_week", "rt_2_the_next_week\rt_2_the_next_week.csproj", "{8FE8703A-9D1E-4B5B-B627-0D241C6E49E0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaytraceView.Prototype", "RaytraceView.Prototype\RaytraceView.Prototype.csproj", "{3A60FB37-5AE5-4BA8-9070-3414B86C09E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{8FE8703A-9D1E-4B5B-B627-0D241C6E49E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FE8703A-9D1E-4B5B-B627-0D241C6E49E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FE8703A-9D1E-4B5B-B627-0D241C6E49E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A60FB37-5AE5-4BA8-9070-3414B86C09E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A60FB37-5AE5-4BA8-9070-3414B86C09E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A60FB37-5AE5-4BA8-9070-3414B86C09E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A60FB37-5AE5-4BA8-9070-3414B86C09E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
