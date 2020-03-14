@@ -43,7 +43,24 @@ namespace RaytraceView.Prototype
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+
+            //app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = (context) =>
+                {
+                    // Disable caching for all static files
+                    //context.Context.Response.Headers["Cache-Control"] = "no-cache,no-store";
+                    //context.Context.Response.Headers["Pragma"] = "no-cache";
+                    //context.Context.Response.Headers["Expires"] = "-1";
+
+                    // Retrieve cache configuration from appsettings.json
+                    context.Context.Response.Headers["Cache-Control"] = Configuration["StaticFiles:Headers:Cache-Control"];
+                    context.Context.Response.Headers["Pragma"] = Configuration["StaticFiles:Headers:Pragma"];
+                    context.Context.Response.Headers["Expires"] = Configuration["StaticFiles:Headers:Expires"];
+                }
+            });
+
             if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
