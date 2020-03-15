@@ -7,14 +7,19 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Rt1InOneWeekendComponent {
   public raytrace: Rt1InOneWeekend;
+  public raytraceImage: string;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     http.get<Rt1InOneWeekend>(baseUrl + 'rt1inoneweekend').subscribe(result => {
       this.raytrace = result;
+      this.raytraceImage = "data:image/png;base64," + this.raytrace.imagePng;
+      let imageelem: any = document.getElementById("raytraceimage");
+      imageelem.src = this.raytraceImage;
     }, error => console.error(error));
   }
 }
 
 interface Rt1InOneWeekend {
   title: string;
+  imagePng: string;
 }
