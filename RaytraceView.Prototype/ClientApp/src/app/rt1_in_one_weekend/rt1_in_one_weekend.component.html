@@ -1,4 +1,33 @@
 
+<script id="texture-shader-vs" type="x-shader/x-vertex">
+precision highp float;
+
+attribute vec3 inPos;
+attribute vec2 inUV;
+
+varying vec2 vertUV;
+
+void main()
+{
+    vertUV        = inUV;
+    gl_Position   = vec4(viewPos, 1.0);
+}
+</script>
+
+<script id="texture-shader-fs" type="x-shader/x-fragment">
+precision mediump float;
+
+varying vec2 vertUV;
+uniform sampler2D u_texture;
+
+void main()
+{
+    vec4 texColor = texture2D(u_texture, vertUV.st);
+    gl_FragColor  = vec4(texColor.rgb, 1.0);
+}
+</script>
+
 <p *ngIf="!raytrace"><em>Loading...</em></p>
 <p *ngIf="raytrace">{{ raytrace.title }}</p>
-<p><img id="raytraceimage"/></p>
+<p><img id="raytraceimage" /></p>
+<p><canvas id="raytracecanvas" style="border: none" width="100" height="100"></canvas></p>

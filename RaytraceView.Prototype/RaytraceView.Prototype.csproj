@@ -25,6 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\rt1_in_one_weekend\ShaderProgram.ts" />
+    <None Remove="ClientApp\src\app\rt1_in_one_weekend\Texture.ts" />
+    <None Remove="ClientApp\src\app\rt1_in_one_weekend\VertexBuffer.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="{d37e2a3e-8545-3a39-9f4f-31827c9124ab}">
       <Guid>d37e2a3e-8545-3a39-9f4f-31827c9124ab</Guid>
       <VersionMajor>2</VersionMajor>
@@ -35,8 +41,13 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\about\" />
-    <Folder Include="ClientApp\src\app\rt1_in_one_weekend\" />
     <Folder Include="ViewModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\ShaderProgram.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\Texture.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\VertexBuffer.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
