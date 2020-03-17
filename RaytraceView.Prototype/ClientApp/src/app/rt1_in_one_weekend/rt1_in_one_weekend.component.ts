@@ -20,9 +20,13 @@ export class Rt1InOneWeekendComponent {
   bufQuad: any;
   texture: any;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
+  }
 
-    http.get<Rt1InOneWeekend>(baseUrl + 'rt1inoneweekend').subscribe(result => {
+  //ngOnChanges, ngOnInit, ngDoChecks, ngAfterContentInit, ngAfterCcontentChecked, ngAfterViewinit, ngAfterViewChecked, ngOnDestroy
+
+  ngOnInit(): void {
+    this.http.get<Rt1InOneWeekend>(this.baseUrl + 'rt1inoneweekend').subscribe(result => {
       this.raytrace = result;
       this.raytraceImageName = "data:image/png;base64," + this.raytrace.imagePng;
       let raytraceimage: any = document.getElementById("raytraceimage");

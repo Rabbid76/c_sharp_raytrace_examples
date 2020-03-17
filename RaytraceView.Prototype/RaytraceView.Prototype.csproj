@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\about\" />
+    <Folder Include="ClientApp\src\app\health-check\" />
     <Folder Include="ViewModel\" />
   </ItemGroup>
 

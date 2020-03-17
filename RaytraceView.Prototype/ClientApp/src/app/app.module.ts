@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 //import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { AboutComponent } from './about/about.component';
 import { Rt1InOneWeekendComponent } from './rt1_in_one_weekend/rt1_in_one_weekend.component';
+import { HealthCheckComponent } from './health-check/health-check.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { Rt1InOneWeekendComponent } from './rt1_in_one_weekend/rt1_in_one_weeken
     //CounterComponent,
     //FetchDataComponent,
     Rt1InOneWeekendComponent,
-    AboutComponent
+    AboutComponent,
+    HealthCheckComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,6 +34,7 @@ import { Rt1InOneWeekendComponent } from './rt1_in_one_weekend/rt1_in_one_weeken
       //{ path: 'fetch-data', component: FetchDataComponent },
       { path: 'rt1_in_one_weekend', component: Rt1InOneWeekendComponent },
       { path: 'about', component: AboutComponent },
+      { path: 'health-check', component: HealthCheckComponent }
     ])
   ],
   providers: [],
