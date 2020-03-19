@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ray_tracing_modules\ray_tracing_modules.csproj" />
     <ProjectReference Include="..\rt_1_in_one_week.raytrace\rt_1_in_one_week.raytrace.csproj" />
     <ProjectReference Include="..\WpfViewModelModule\WpfViewModelModule.csproj" />
   </ItemGroup>

@@ -1,54 +1,73 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using rt_1_in_one_week.ViewModel;
 using rt_1_in_one_week.raytrace.Mathematics;
-using rt_1_in_one_week.raytrace.Color;
 using rt_1_in_one_week.Process;
+using ray_tracing_modules.RayTraycer.Interfaces;
+using ray_tracing_modules.RayTraycer.Color;
+using ray_tracing_modules.RayTraycer.Model;
 
 namespace rt_1_in_one_week.Model
 {
     public class RayTraceModel
     {
-        private RayTraceViewModel _vm;
-        private Thread _rt_thread;
-        private bool _render = false;
+        private RayTraceViewModel rayTraceViewModel;
+        private Task rayTraceTask;
+        private RayTraceConfigurationModel rayTraceConfguration;
+        private RayTraceAdapter rayTrace;
 
         public RayTraceModel()
         { }
 
         public RayTraceViewModel ViewModel 
         {
-            set { _vm = value; }
+            set { rayTraceViewModel = value; }
         }
 
         public void StartRayTrace()
         {
-            _render = true;
-            _rt_thread = new Thread(RayTraceThread);
-            _rt_thread.Start(this);
+            rayTraceConfguration = new RayTraceConfigurationModel
+            {
+                Width = rayTraceViewModel.BitmapWidth,
+                Height = rayTraceViewModel.BitmapHeight,
+                Samples = rayTraceViewModel.RenderSamples,
+                UpdateRate = rayTraceViewModel.RenderUpdateRate,
+            };
+            rayTrace = new RayTraceAdapter
+            (
+                progress => rayTraceViewModel.Progress = progress,
+                (x, y, r, g, b) => rayTraceViewModel.SetBitmapPixel(x, y, ColorFactory.CreateSquare(r, g, b))
+            );
+            rayTraceTask = RayTraceAsync();
         }
 
         public void TerminateRayTrace()
         {
-            _render = false;
-            _rt_thread?.Join();
+            if (rayTraceConfguration != null)
+                rayTrace.KeepRendering = false;
+            if (rayTraceTask != null)
+                rayTraceTask.Wait();
         }
 
-        private static void RayTraceThread(Object obj)
+        private async Task RayTraceAsync()
         {
-            var model = obj as RayTraceModel;
-            var viewModel = model._vm;
+            await Task.Run(RayTrace).ConfigureAwait(false);
+        }
+
+        private void RayTrace()
+        {
+            IRayTraceConfigurationModel rayTraceConfguration = this.rayTraceConfguration;
+            IRayTrace rayTrace = this.rayTrace;
 
             // get current settings
-            var cx = viewModel.BitmapWidth;
-            var cy = viewModel.BitmapHeight;
-            var no_samples = viewModel.RenderSamples;
-            var update_rate = viewModel.RenderUpdateRate;
+            var cx = rayTraceConfguration.Width;
+            var cy = rayTraceConfguration.Height;
+            var no_samples = rayTraceConfguration.Samples;
+            var update_rate = rayTraceConfguration.UpdateRate;
             int no_samples_outer = Math.Max(1, (int)(no_samples * update_rate + 0.5));
             int no_samples_inner = (no_samples + no_samples_outer - 1) / no_samples_outer;
-            var scene = Int32.Parse(viewModel.CurrentScene.Number);
+            var scene = Int32.Parse(rayTraceViewModel.CurrentScene.Number);
 
             var aspect = (double)cx / (double)cy;
             var sampler = new Random();
@@ -143,16 +162,16 @@ namespace rt_1_in_one_week.Model
 
             var colorBuffer = new RGBdBuffer(cx, cy);
             int processed = 0;
-            for (int outer_i = 0; model._render && (outer_i * no_samples_inner) < no_samples; ++outer_i)
+            for (int outer_i = 0; rayTrace.KeepRendering && (outer_i * no_samples_inner) < no_samples; ++outer_i)
             {
                 foreach ((int x, int y) in new IterateBufferExp2(cx, cy))
                 {
-                    if (model._render == false)
+                    if (rayTrace.KeepRendering == false)
                         break;
 
                     int no_start = no_samples_inner * outer_i;
                     int no_end = Math.Min(no_samples, no_start + no_samples_inner);
-                    for (int sample_i = no_start; model._render && sample_i < no_end; ++sample_i)
+                    for (int sample_i = no_start; rayTrace.KeepRendering && sample_i < no_end; ++sample_i)
                     {
                         (double dx, double dy) = ((double)x + sampler.NextDouble(), (double)y + sampler.NextDouble());
                         (double u, double v) = (dx / cx, dy / cy);
@@ -161,12 +180,8 @@ namespace rt_1_in_one_week.Model
                     }
 
                     var col = colorBuffer.Get(x, y);
-                    viewModel.SetBitmapPixel(x, cy - y - 1, ColorFactory.CreateSquare(col));
-                    viewModel.Progress = (double)(++processed) / (double)(cx * cy * no_samples_outer);
-
-                    //Thread.Yield();
-                    //Thread.SpinWait(1);
-                    //Thread.Sleep(1);
+                    rayTrace.SetPixel(x, cy - y - 1, col.X, col.Y, col.Z);
+                    rayTrace.Progress = (double)(++processed) / (double)(cx * cy * no_samples_outer);
                 }
             }
         }
