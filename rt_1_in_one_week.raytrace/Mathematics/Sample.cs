@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace rt_1_in_one_week.Mathematics
+namespace rt_1_in_one_week.raytrace.Mathematics
 {
     static public class Sample
     {

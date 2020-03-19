@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using rt_1_in_one_week.ViewModel;
-using rt_1_in_one_week.Mathematics;
-using rt_1_in_one_week.Color;
+using rt_1_in_one_week.raytrace.Mathematics;
+using rt_1_in_one_week.raytrace.Color;
 using rt_1_in_one_week.Process;
 
 namespace rt_1_in_one_week.Model
