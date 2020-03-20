@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using rt_1_in_one_week.ViewModel;
-using rt_1_in_one_week.raytrace.Mathematics;
-using rt_1_in_one_week.Process;
-using ray_tracing_modules.RayTraycer.Interfaces;
-using ray_tracing_modules.RayTraycer.Color;
+using rt_1_in_one_week.raytrace.Scenes;
+using rt_1_in_one_week.raytrace.RayTracer;
+using ray_tracing_modules.Color;
+using ray_tracing_modules.Process;
 using ray_tracing_modules.RayTraycer.Model;
 
 namespace rt_1_in_one_week.Model
@@ -14,8 +13,7 @@ namespace rt_1_in_one_week.Model
     {
         private RayTraceViewModel rayTraceViewModel;
         private Task rayTraceTask;
-        private RayTraceConfigurationModel rayTraceConfguration;
-        private RayTraceAdapter rayTrace;
+        private RayTraceProcess rayTraceProcess;
 
         public RayTraceModel()
         { }
@@ -27,187 +25,40 @@ namespace rt_1_in_one_week.Model
 
         public void StartRayTrace()
         {
-            rayTraceConfguration = new RayTraceConfigurationModel
+            var rayTraceConfguration = new RayTraceConfigurationModel
             {
                 Width = rayTraceViewModel.BitmapWidth,
                 Height = rayTraceViewModel.BitmapHeight,
                 Samples = rayTraceViewModel.RenderSamples,
                 UpdateRate = rayTraceViewModel.RenderUpdateRate,
             };
-            rayTrace = new RayTraceAdapter
+            var sceneType = Int32.Parse(rayTraceViewModel.CurrentScene.Number);
+            var aspect = (double)rayTraceConfguration.Width / (double)rayTraceConfguration.Height;
+            IScene scene;
+            switch (sceneType)
+            {
+                default:
+                case 0: scene = new CoverScene(aspect); break;
+                case 1: scene = new MaterialsScene(aspect); break;
+                case 2: scene = new DefocusBlurScene(aspect); break;
+                case 3: scene = new TestScene(aspect); break;
+            }
+            var rayTracer = new RayTracer(scene);
+            var rayTraceTarget = new RayTraceTargetAdapter
             (
                 progress => rayTraceViewModel.Progress = progress,
-                (x, y, r, g, b) => rayTraceViewModel.SetBitmapPixel(x, y, ColorFactory.CreateSquare(r, g, b))
+                (x, y, c) => rayTraceViewModel.SetBitmapPixel(x, y, ColorFactory.CreateSquare(c))
             );
-            rayTraceTask = RayTraceAsync();
+            rayTraceProcess = new RayTraceProcess(rayTraceConfguration, rayTracer, rayTraceTarget);
+            rayTraceTask = rayTraceProcess.RayTraceAsync();
         }
 
         public void TerminateRayTrace()
         {
-            if (rayTraceConfguration != null)
-                rayTrace.KeepRendering = false;
+            if (rayTraceProcess != null)
+                rayTraceProcess.Stop();
             if (rayTraceTask != null)
                 rayTraceTask.Wait();
-        }
-
-        private async Task RayTraceAsync()
-        {
-            await Task.Run(RayTrace).ConfigureAwait(false);
-        }
-
-        private void RayTrace()
-        {
-            IRayTraceConfigurationModel rayTraceConfguration = this.rayTraceConfguration;
-            IRayTrace rayTrace = this.rayTrace;
-
-            // get current settings
-            var cx = rayTraceConfguration.Width;
-            var cy = rayTraceConfguration.Height;
-            var no_samples = rayTraceConfguration.Samples;
-            var update_rate = rayTraceConfguration.UpdateRate;
-            int no_samples_outer = Math.Max(1, (int)(no_samples * update_rate + 0.5));
-            int no_samples_inner = (no_samples + no_samples_outer - 1) / no_samples_outer;
-            var scene = Int32.Parse(rayTraceViewModel.CurrentScene.Number);
-
-            var aspect = (double)cx / (double)cy;
-            var sampler = new Random();
-            var camera = Camera.CreateByVerticalFiled(90, aspect);
-            HitableList world;
-
-            switch (scene)
-            {
-                default:
-                case 0:
-                    {
-                        List<IHitable> hitables = new List<IHitable>();
-                        hitables.Add(new Sphere(Vec3.Create(0, -1000, 0), 1000, new Lambertian(Vec3.Create(0.5, 0.5, 0.5))));
-                        for (int a = -11; a < 11; ++a)
-                        {
-                            for (int b = -11; b < 11; ++b)
-                            {
-                                double choos_mat = sampler.NextDouble();
-                                Vec3 center = Vec3.Create(a + 0.9 * sampler.NextDouble(), 0.2, b + 0.9 * sampler.NextDouble());
-                                if ((center - Vec3.Create(4,0.2,0)).Length > 0.9)
-                                {
-                                    if (choos_mat < 0.8) // diffuse
-                                        hitables.Add(new Sphere(center, 0.2,
-                                            new Lambertian(Vec3.Create(sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble(), sampler.NextDouble() * sampler.NextDouble()))));
-                                    else if (choos_mat < 0.9) // metal
-                                        hitables.Add(new Sphere(center, 0.2,
-                                            new Metal(Vec3.Create(0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble()), 0.5 * (1 + sampler.NextDouble())), 0.5 * sampler.NextDouble())));
-                                    else // glass
-                                        hitables.Add(new Sphere(center, 0.2, new Dielectric(1.5)));
-                                }
-                            }
-                        }
-                        hitables.Add(new Sphere(Vec3.Create(0, 1, 0), 1, new Dielectric(1.5)));
-                        hitables.Add(new Sphere(Vec3.Create(-4, 1, 0), 1, new Lambertian(Vec3.Create(0.4, 0.2, 0.1))));
-                        hitables.Add(new Sphere(Vec3.Create(4, 1, 0), 1, new Metal(Vec3.Create(0.7, 0.6, 0.5), 0)));
-                        world = new HitableList(hitables.ToArray());
-                        var lookFrom = Vec3.Create(12, 2, 3);
-                        var lookAt = Vec3.Create(0, 0, 0);
-                        double dist_to_focus = 10;
-                        double aderpture = 0.1;
-                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 20, aspect, aderpture, dist_to_focus);
-                    }
-                    break;
-
-                // materials
-                case 1:
-                    {
-                        IHitable[] hitables = {
-                            new Sphere(Vec3.Create(0, -100.5, 0), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
-                            new Sphere(Vec3.Create(0, 0, 0), 0.5, new Lambertian(Vec3.Create(0.1, 0.2, 0.5))),
-                            new Sphere(Vec3.Create(1, 0, 0), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
-                            new Sphere(Vec3.Create(-1, 0, 0), 0.5, new Dielectric(1.5)),
-                            new Sphere(Vec3.Create(-1, 0, 0), -0.45, new Dielectric(1.5))
-                        };
-                        world = new HitableList(hitables);
-                        camera = Camera.CreateLookAt(Vec3.Create(0.25, 0.5, 2.2), Vec3.Create(0.1, 0.0, 0), Vec3.Create(0, 1, 0), 45, aspect, 0, 1);
-                    }
-                    break;
-
-                // defocus blur
-                case 2:
-                    {
-                        IHitable[] hitables = {
-                            new Sphere(Vec3.Create(0, -100.5, -1), 100, new Lambertian(Vec3.Create(0.8, 0.8, 0.0))),
-                            new Sphere(Vec3.Create(0, 0, -1), 0.5, new Lambertian(Vec3.Create(0.1, 0.2, 0.5))),
-                            new Sphere(Vec3.Create(1, 0, -1), 0.5, new Metal(Vec3.Create(0.8, 0.6, 0.2), 0.3)),
-                            new Sphere(Vec3.Create(-1, 0, -1), 0.5, new Dielectric(1.5)),
-                            new Sphere(Vec3.Create(-1, 0, -1), -0.45, new Dielectric(1.5))
-                        };
-                        world = new HitableList(hitables);
-                        var lookFrom = Vec3.Create(3, 3, 2);
-                        var lookAt = Vec3.Create(0, 0, -1);
-                        var dist_to_focus = (lookFrom - lookAt).Length;
-                        double aderpture = 2;
-                        camera = Camera.CreateLookAt(lookFrom, lookAt, Vec3.Create(0, 1, 0), 25, aspect, aderpture, dist_to_focus);
-                    }
-                    break;
-
-                // test 1
-                case 3:
-                    {
-                        double R = Math.Cos(Math.PI / 4);
-                        IHitable[] hitables = {
-                            new Sphere(Vec3.Create(-R, 0, -1), R, new Lambertian(Vec3.Create(1, 0, 0))),
-                            new Sphere(Vec3.Create(R, 0, -1), R, new Lambertian(Vec3.Create(0, 0, 1)))
-                        };
-                        world = new HitableList(hitables);
-                        camera = Camera.CreateByVerticalFiled(90, aspect);
-                    }
-                    break;
-            }
-
-            var colorBuffer = new RGBdBuffer(cx, cy);
-            int processed = 0;
-            for (int outer_i = 0; rayTrace.KeepRendering && (outer_i * no_samples_inner) < no_samples; ++outer_i)
-            {
-                foreach ((int x, int y) in new IterateBufferExp2(cx, cy))
-                {
-                    if (rayTrace.KeepRendering == false)
-                        break;
-
-                    int no_start = no_samples_inner * outer_i;
-                    int no_end = Math.Min(no_samples, no_start + no_samples_inner);
-                    for (int sample_i = no_start; rayTrace.KeepRendering && sample_i < no_end; ++sample_i)
-                    {
-                        (double dx, double dy) = ((double)x + sampler.NextDouble(), (double)y + sampler.NextDouble());
-                        (double u, double v) = (dx / cx, dy / cy);
-                        var sampleColor = RaytraceColor(camera.Get(u, v), world, 0);
-                        colorBuffer.Set(x, y, sampleColor, sample_i);
-                    }
-
-                    var col = colorBuffer.Get(x, y);
-                    rayTrace.SetPixel(x, cy - y - 1, col.X, col.Y, col.Z);
-                    rayTrace.Progress = (double)(++processed) / (double)(cx * cy * no_samples_outer);
-                }
-            }
-        }
-
-        private static Vec3 CreateSky(Ray r)
-        {
-            var unit_direction = Vec3.Normalize(r.Direction);
-            var t = unit_direction.Y * 0.5 + 0.5;
-            var v = new Vec3(1.0) * (1.0 - t) + new Vec3(0.5, 0.7, 1.0) * t;
-            return v;
-        }
-
-        private static Vec3 RaytraceColor(Ray r, IHitable hitable, int depth)
-        {
-            HitRecord rec;
-            if (hitable.Hit(r, 0.001, Double.MaxValue, out rec))
-            {
-                Ray scattered;
-                Vec3 attenuation;
-                if (depth < 50 && rec.Material.Scatter(r, rec, out attenuation, out scattered))
-                {
-                    return attenuation * RaytraceColor(scattered, hitable, depth + 1);
-                }
-                return Vec3.Create(0.0);
-            }
-            return CreateSky(r);
         }
     }
 }

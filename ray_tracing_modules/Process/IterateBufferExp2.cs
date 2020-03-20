@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace rt_1_in_one_week.Process
+namespace ray_tracing_modules.Process
 {
     class IterateBufferExp2
         : IIterateBuffer
