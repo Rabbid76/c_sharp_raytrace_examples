@@ -1,32 +1,25 @@
 export class Texture {
   private size: number[];
   private dummyObj: any;
-  private image: any;
   public textureObj: any;
 
-  constructor(public readonly gl: any, name: string, public callBack: () => any = null, public texUnit: number = 0, public readonly dflt: any = [128, 128, 128, 255]) {
-    let texture: Texture = this;
-    let image = { "cx": this.dflt.w || 1, "cy": this.dflt.h || 1, "plane": this.dflt.p || this.dflt };
-    this.size = [image.cx, image.cy];
-    this.dummyObj = this.createTexture2D(image, true)
-    this.image = new Image(64, 64);
-    this.image.setAttribute('crossorigin', 'anonymous');
-    this.image.onload = function (): void {
-      let cx = 1 << 31 - Math.clz32(texture.image.naturalWidth);
-      if (cx < texture.image.naturalWidth) cx *= 2;
-      let cy = 1 << 31 - Math.clz32(texture.image.naturalHeight);
-      if (cy < texture.image.naturalHeight) cy *= 2;
+  constructor(public readonly gl: any, private image: any, private texUnit: number = 0, trasnformPowerOf2: boolean = false) {
+    if (trasnformPowerOf2) {
+      let cx = 1 << 31 - Math.clz32(this.image.naturalWidth);
+      if (cx < this.image.naturalWidth) cx *= 2;
+      let cy = 1 << 31 - Math.clz32(this.image.naturalHeight);
+      if (cy < this.image.naturalHeight) cy *= 2;
       var canvas = document.createElement('canvas');
       canvas.width = cx;
       canvas.height = cy;
       var context = canvas.getContext('2d');
-      context.drawImage(texture.image, 0, 0, canvas.width, canvas.height);
-      texture.textureObj = texture.createTexture2D(canvas, true);
-      texture.size = [cx, cy];
-      if (texture.callBack)
-          texture.callBack();
+      context.drawImage(this.image, 0, 0, canvas.width, canvas.height);
+      this.size = [cx, cy];
+      this.textureObj = this.createTexture2D(canvas, true);
+    } else {
+      this.size = [this.image.naturalWidth, this.image.naturalHeight];
+      this.textureObj = this.createTexture2D(this.image, true);
     }
-    this.image.src = name;
   }
   delete(): void {
     this.gl.deleteTexture(this.textureObj);

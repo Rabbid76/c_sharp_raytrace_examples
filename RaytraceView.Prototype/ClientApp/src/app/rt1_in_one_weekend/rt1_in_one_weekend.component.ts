@@ -1,7 +1,7 @@
 import { Component, Inject, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ShaderProgram, ShaderSpec } from "./ShaderProgram";
-import { VertexBuffer, VertexAttribute } from "./VertexBuffer";
+import { VertexArrayObject, VertexAttribute } from "./VertexArrayObject";
 import { Texture } from "./Texture";
 
 @Component({
@@ -30,6 +30,7 @@ export class Rt1InOneWeekendComponent {
       this.raytrace = result;
       this.raytraceImageName = "data:image/png;base64," + this.raytrace.imagePng;
       let raytraceimage: any = document.getElementById("raytraceimage");
+      raytraceimage.onload = (): void => { this.createTexture(raytraceimage); }
       raytraceimage.src = this.raytraceImageName;
     }, error => console.error(error));
   }
@@ -46,14 +47,18 @@ export class Rt1InOneWeekendComponent {
   }
 
   refreshCanvas(): void {
-    var self = this;
-    requestAnimationFrame((deltaMS: number) => { self.drawCanvas(deltaMS); });
+    requestAnimationFrame((deltaMS: number) => { this.drawCanvas(deltaMS); });
+  }
+
+  createTexture(raytraceimage: any): void {
+    this.texture = new Texture(this.gl, raytraceimage);
+    this.refreshCanvas();
   }
 
   initCanvas(): void {
     this.raytracecanvas = document.getElementById("raytracecanvas");
     this.canvasSize = [this.raytracecanvas.width, this.raytracecanvas.height];
-    this.gl = this.raytracecanvas.getContext("experimental-webgl");
+    this.gl = this.raytracecanvas.getContext("webgl2");
 
     let vertexShader: any = `
     precision highp float;
@@ -81,11 +86,6 @@ export class Rt1InOneWeekendComponent {
         gl_FragColor  = vec4(texColor.rgb, 1.0);
     }`
 
-    var self = this;
-    let refresh = () => { self.refreshCanvas(); };
-    this.texture = new Texture(this.gl, "https://raw.githubusercontent.com/Rabbid76/graphics-snippets/master/resource/texture/supermario.jpg", refresh);
-    this.texture.bound = false;
-
     this.progDraw = new ShaderProgram(this.gl,
       [{ source: vertexShader, stage: this.gl.VERTEX_SHADER },
         { source: fragmentShader, stage: this.gl.FRAGMENT_SHADER }
@@ -96,7 +96,7 @@ export class Rt1InOneWeekendComponent {
     this.progDraw.inUV = this.progDraw.attrI("inUV");
     this.progDraw.invalid = true;
 
-    this.bufQuad = new VertexBuffer(this.gl,
+    this.bufQuad = new VertexArrayObject(this.gl,
       [{ data: [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], attrSize: 3, attrLoc: this.progDraw.inPos },
       { data: [0, 0, 1, 0, 1, 1, 0, 1], attrSize: 2, attrLoc: this.progDraw.inUV }],
       [0, 1, 2, 0, 2, 3]);
@@ -108,15 +108,16 @@ export class Rt1InOneWeekendComponent {
     this.gl.clearColor(1.0, 0.0, 0.0, 1.0);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
+    // bind the texture
+    if (this.texture != undefined)
+        this.texture.bind(0);
+
     // set up draw shader
     if (this.progDraw.invalid) {
       this.progDraw.invalid = false;
       this.progDraw.use();
       this.progDraw.setI1("u_texture", 0);
     }
-
-    // bind the texture
-    this.texture.bound = this.texture.bound || this.texture.bind(0);
 
     // draw scene
     this.bufQuad.draw();
