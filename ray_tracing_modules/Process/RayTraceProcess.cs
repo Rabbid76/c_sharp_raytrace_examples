@@ -7,10 +7,11 @@ namespace ray_tracing_modules.Process
 {
     public class RayTraceProcess
     {
-        IRayTraceConfigurationModel confguration;
-        IRayTracer rayTracer;
-        IRayTraceTarget target;
-        bool keepRendering = true;
+        private IRayTraceConfigurationModel confguration;
+        private IRayTracer rayTracer;
+        private IRayTraceTarget target;
+        private bool keepRendering = false;
+        private Task rayTraceTask;
 
         public RayTraceProcess(IRayTraceConfigurationModel confguration, IRayTracer rayTracer, IRayTraceTarget target)
         {
@@ -19,15 +20,32 @@ namespace ray_tracing_modules.Process
             this.target = target;
         }
 
+        ~RayTraceProcess()
+        {
+            WaitStop();
+        }
+
+        public void StartAsync() => rayTraceTask = RayTraceAsync();
+
+        public void WaitStop()
+        {
+            Stop();
+            rayTraceTask?.Wait();
+        }
+
         public void Stop() => keepRendering = false;
 
         public async Task RayTraceAsync()
         {
-            await Task.Run(RayTrace).ConfigureAwait(false);
+            await Task.Run(() =>
+            {
+                RayTrace();
+            }).ConfigureAwait(false);
         }
 
         public void RayTrace()
         {
+            keepRendering = true;
             var cx = confguration.Width;
             var cy = confguration.Height;
             var no_samples = confguration.Samples;

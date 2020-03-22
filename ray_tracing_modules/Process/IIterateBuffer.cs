@@ -3,7 +3,7 @@
 namespace ray_tracing_modules.Process
 {
     interface IIterateBuffer 
+        : IEnumerable<(int, int)>
     {
-        IEnumerator<(int, int)> GetEnumerator();
     }
 }

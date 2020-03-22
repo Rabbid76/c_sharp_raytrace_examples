@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace ray_tracing_modules.Process
@@ -16,6 +17,15 @@ namespace ray_tracing_modules.Process
         {
             _cx = cx;
             _cy = cy;
+        }
+
+        private IEnumerator GetEnumerator1()
+        {
+            return this.GetEnumerator();
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator1();
         }
 
         public IEnumerator<(int, int)> GetEnumerator()

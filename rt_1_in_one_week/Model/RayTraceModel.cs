@@ -12,7 +12,6 @@ namespace rt_1_in_one_week.Model
     public class RayTraceModel
     {
         private RayTraceViewModel rayTraceViewModel;
-        private Task rayTraceTask;
         private RayTraceProcess rayTraceProcess;
 
         public RayTraceModel()
@@ -50,15 +49,12 @@ namespace rt_1_in_one_week.Model
                 (x, y, c) => rayTraceViewModel.SetBitmapPixel(x, y, ColorFactory.CreateSquare(c))
             );
             rayTraceProcess = new RayTraceProcess(rayTraceConfguration, rayTracer, rayTraceTarget);
-            rayTraceTask = rayTraceProcess.RayTraceAsync();
+            rayTraceProcess.StartAsync();
         }
 
         public void TerminateRayTrace()
         {
-            if (rayTraceProcess != null)
-                rayTraceProcess.Stop();
-            if (rayTraceTask != null)
-                rayTraceTask.Wait();
+            rayTraceProcess?.WaitStop();
         }
     }
 }
