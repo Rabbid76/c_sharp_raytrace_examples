@@ -13,6 +13,7 @@ export class Rt1InOneWeekendComponent {
   //@ViewChild('raytraceimage', { static: false }) raytraceimage: ElementRef;
   raytracecanvas: any; 
   raytraceImageName: string;
+  raytraceimage: any;
   raytrace: Rt1InOneWeekend;
   canvasSize: number[];
   gl: any;
@@ -29,9 +30,9 @@ export class Rt1InOneWeekendComponent {
     this.http.get<Rt1InOneWeekend>(this.baseUrl + 'rt1inoneweekend').subscribe(result => {
       this.raytrace = result;
       this.raytraceImageName = "data:image/png;base64," + this.raytrace.imagePng;
-      let raytraceimage: any = document.getElementById("raytraceimage");
-      raytraceimage.onload = (): void => { this.createTexture(raytraceimage); }
-      raytraceimage.src = this.raytraceImageName;
+      this.raytraceimage = new Image();
+      this.raytraceimage.onload = (): void => { this.createTexture(this.raytraceimage); }
+      this.raytraceimage.src = this.raytraceImageName;
     }, error => console.error(error));
   }
 
@@ -53,6 +54,26 @@ export class Rt1InOneWeekendComponent {
   createTexture(raytraceimage: any): void {
     this.texture = new Texture(this.gl, raytraceimage);
     this.refreshCanvas();
+    requestAnimationFrame((deltaMS: number) => { this.updateData(deltaMS); });
+  }
+
+  updateData(deltaMS: number): void {
+    this.http.get<Rt1InOneWeekendImageData>(this.baseUrl + 'rt1inoneweekendimagedata').subscribe(result => {
+      const pixelData = result.pixelData;
+      if (pixelData) {
+        this.texture.bind(0);
+        for (let i = 0; i < pixelData.length; ++i) {
+          let data = pixelData[i];
+          this.gl.texSubImage2D(this.gl.TEXTURE_2D, 0, data.x, data.y, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
+            new Uint8Array([data.r, data.g, data.b, 255]));
+        }
+      }
+    }, error => console.error(error));
+    this.refreshCanvas();
+
+    setTimeout(() => {
+      requestAnimationFrame((deltaMS: number) => { this.updateData(deltaMS); });
+    }, 200);
   }
 
   initCanvas(): void {
@@ -109,15 +130,15 @@ export class Rt1InOneWeekendComponent {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
     // bind the texture
-    if (this.texture != undefined)
+    if (this.texture !== undefined)
         this.texture.bind(0);
 
     // set up draw shader
-    if (this.progDraw.invalid) {
-      this.progDraw.invalid = false;
+    //if (this.progDraw.invalid) {
+    //  this.progDraw.invalid = false;
       this.progDraw.use();
       this.progDraw.setI1("u_texture", 0);
-    }
+    //}
 
     // draw scene
     this.bufQuad.draw();
@@ -127,4 +148,16 @@ export class Rt1InOneWeekendComponent {
 interface Rt1InOneWeekend {
   title: string;
   imagePng: string;
+}
+
+interface Rt1InOneWeekendImageData {
+  pixelData: PixelData[];
+}
+
+interface PixelData {
+  x: number;
+  y: number;
+  r: number;
+  g: number;
+  b: number;
 }

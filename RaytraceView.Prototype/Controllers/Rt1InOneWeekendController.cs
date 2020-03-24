@@ -13,21 +13,24 @@ namespace RaytraceView.Prototype.Controllers
     [Route("[controller]")]
     public class Rt1InOneWeekendController : ControllerBase
     {
-        private readonly ILogger<Rt1InOneWeekendController> _logger;
+        private readonly ILogger<Rt1InOneWeekendController> logger;
+        private readonly Rt1InOneWeekRayTracer rayTracer;
 
         public Rt1InOneWeekendController(ILogger<Rt1InOneWeekendController> logger)
         {
-            _logger = logger;
+            this.logger = logger;
+            rayTracer = Rt1InOneWeekRayTracer.RayTracerSingleton();
+            rayTracer?.StartRayTrace();
         }
 
         [HttpGet]
-        public ViewModel.Rt1InOneWeekend Get()
+        public ViewModel.Rt1InOneWeekendModel Get()
         {
             var image = TestImage();
             var imageBytes = ImageToByteArray(image);
             var imageString = ByteArrayToString(imageBytes);
 
-            var model = new ViewModel.Rt1InOneWeekend
+            var model = new ViewModel.Rt1InOneWeekendModel
             {
                 Title = "Ray Tracing in One Weekend",
                 ImagePng = imageString
@@ -37,8 +40,8 @@ namespace RaytraceView.Prototype.Controllers
 
         private Image TestImage()
         {
-            int cx = 100;
-            int cy = 100;
+            int cx = 600;
+            int cy = 300;
             var bitmap = new Bitmap(cx, cy);
             for (int x = 0; x < cx; ++x)
             {
@@ -46,7 +49,8 @@ namespace RaytraceView.Prototype.Controllers
                 {
                     double u = (double)x / cx;
                     double v = (double)y / cy;
-                    Color c = RGBColor(u, v, (1-u)*(1-v));
+                    double t = (1 - v * u) * 0.4 + 0.3;
+                    Color c = RGBColor(t, t, t);
                     bitmap.SetPixel(x, y, c);
                 }
             }
