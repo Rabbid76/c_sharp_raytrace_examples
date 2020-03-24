@@ -23,10 +23,7 @@ namespace RaytraceView.Prototype.Controllers
         [HttpGet]
         public ViewModel.Rt1InOneWeekendImageDataModel Get()
         {
-            var model = new ViewModel.Rt1InOneWeekendImageDataModel
-            {
-                PixelData = rayTracer?.GetPixelData(),
-            };
+            var model = rayTracer?.GetPixelData();
             return model;
         }
     }

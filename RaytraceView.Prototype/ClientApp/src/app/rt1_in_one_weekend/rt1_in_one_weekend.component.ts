@@ -38,8 +38,7 @@ export class Rt1InOneWeekendComponent {
 
   ngAfterViewInit(): void {
     this.initCanvas();
-    var self = this;
-    window.onresize = function () { self.resize(); }
+    window.onresize = () => { this.resize(); }
     this.refreshCanvas();
   }
 
@@ -63,10 +62,11 @@ export class Rt1InOneWeekendComponent {
       if (pixelData) {
         this.texture.bind(0);
         for (let i = 0; i < pixelData.length; ++i) {
-          let data = pixelData[i];
+          const data = pixelData[i];
           this.gl.texSubImage2D(this.gl.TEXTURE_2D, 0, data.x, data.y, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
             new Uint8Array([data.r, data.g, data.b, 255]));
         }
+        document.getElementById("progresstext").innerHTML = (Math.round(result.progress * 100000)/1000).toString() + "%";
       }
     }, error => console.error(error));
     this.refreshCanvas();
@@ -81,7 +81,7 @@ export class Rt1InOneWeekendComponent {
     this.canvasSize = [this.raytracecanvas.width, this.raytracecanvas.height];
     this.gl = this.raytracecanvas.getContext("webgl2");
 
-    let vertexShader: any = `
+    const vertexShader: any = `
     precision highp float;
 
     attribute vec3 inPos;
@@ -95,7 +95,7 @@ export class Rt1InOneWeekendComponent {
       gl_Position = vec4(inPos, 1.0);
     }`
 
-    let fragmentShader: any = `
+    const fragmentShader: any = `
     precision mediump float;
 
     varying vec2 vertUV;
@@ -134,11 +134,11 @@ export class Rt1InOneWeekendComponent {
         this.texture.bind(0);
 
     // set up draw shader
-    //if (this.progDraw.invalid) {
-    //  this.progDraw.invalid = false;
+    if (this.progDraw.invalid) {
+      this.progDraw.invalid = false;
       this.progDraw.use();
       this.progDraw.setI1("u_texture", 0);
-    //}
+    }
 
     // draw scene
     this.bufQuad.draw();
@@ -152,6 +152,7 @@ interface Rt1InOneWeekend {
 
 interface Rt1InOneWeekendImageData {
   pixelData: PixelData[];
+  progress: number;
 }
 
 interface PixelData {

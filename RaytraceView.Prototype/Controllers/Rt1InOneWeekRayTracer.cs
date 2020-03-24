@@ -86,7 +86,7 @@ namespace RaytraceView.Prototype.Controllers
             }
         }
 
-        public PixelData[] GetPixelData()
+        public Rt1InOneWeekendImageDataModel GetPixelData()
         {
             List<PixelData> currentPixelData;
             lock (rayTraceLock)
@@ -94,7 +94,12 @@ namespace RaytraceView.Prototype.Controllers
                 currentPixelData = pixelData;
                 pixelData = new List<PixelData>();
             }
-            return currentPixelData.ToArray();
+            var imageDataModel = new Rt1InOneWeekendImageDataModel
+            {
+                PixelData = currentPixelData.ToArray(),
+                Progress = progress
+            };
+            return imageDataModel;
         }
     }
 }

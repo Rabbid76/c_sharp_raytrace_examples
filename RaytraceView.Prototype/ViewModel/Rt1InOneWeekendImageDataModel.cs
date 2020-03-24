@@ -7,5 +7,6 @@ namespace RaytraceView.Prototype.ViewModel
     public class Rt1InOneWeekendImageDataModel
     {
         public PixelData[] PixelData { get; set; }
+        public double Progress { get; set; }
     }
 }
