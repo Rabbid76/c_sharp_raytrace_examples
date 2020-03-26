@@ -10,16 +10,16 @@ import { Texture } from "./Texture";
 })
 export class Rt1InOneWeekendComponent {
   //@ViewChild('raytracecanvas', { static: false }) raytracecanvas: ElementRef;
-  //@ViewChild('raytraceimage', { static: false }) raytraceimage: ElementRef;
-  raytracecanvas: any; 
-  raytraceImageName: string;
-  raytraceimage: any;
-  raytrace: Rt1InOneWeekend;
-  canvasSize: number[];
-  gl: any;
-  progDraw: any;
-  bufQuad: any;
-  texture: any;
+  private raytracecanvas: any; 
+  private raytraceImageName: string;
+  private raytraceimage: any;
+  private raytrace: Rt1InOneWeekend;
+  private canvasSize: number[];
+  private gl: any;
+  private progDraw: any;
+  private bufQuad: any;
+  private texture: any;
+  private progressText: string;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
   }
@@ -66,7 +66,7 @@ export class Rt1InOneWeekendComponent {
           this.gl.texSubImage2D(this.gl.TEXTURE_2D, 0, data.x, data.y, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
             new Uint8Array([data.r, data.g, data.b, 255]));
         }
-        document.getElementById("progresstext").innerHTML = (Math.round(result.progress * 100000)/1000).toString() + "%";
+        this.progressText = (Math.round(result.progress * 100000)/1000).toString() + "%";
       }
     }, error => console.error(error));
     this.refreshCanvas();
