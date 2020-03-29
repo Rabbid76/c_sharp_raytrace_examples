@@ -25,6 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\rt1_in_one_weekend\model\rt1_models.ts" />
+    <None Remove="ClientApp\src\app\rt1_in_one_weekend\rt1_view\rt1_view.component.ts" />
     <None Remove="ClientApp\src\app\rt1_in_one_weekend\ShaderProgram.ts" />
     <None Remove="ClientApp\src\app\rt1_in_one_weekend\Texture.ts" />
     <None Remove="ClientApp\src\app\rt1_in_one_weekend\VertexBuffer.ts" />
@@ -50,9 +52,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\ShaderProgram.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\Texture.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\VertexBuffer.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\model\rt1_models.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\rt1_view\rt1_view.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\shared\webgl\ShaderProgram.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\shared\webgl\Texture.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\shared\webgl\VertexBuffer.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

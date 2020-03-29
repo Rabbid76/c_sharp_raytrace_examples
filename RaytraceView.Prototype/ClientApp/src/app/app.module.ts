@@ -9,6 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { Rt1InOneWeekendComponent } from './rt1_in_one_weekend/rt1_in_one_weekend.component';
+import { Rt1View } from './rt1_in_one_weekend/rt1_view/rt1_view.component';
 import { HealthCheckComponent } from './health-check/health-check.component';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { HealthCheckComponent } from './health-check/health-check.component';
     NavMenuComponent,
     HomeComponent,
     Rt1InOneWeekendComponent,
+    Rt1View, 
     AboutComponent,
     HealthCheckComponent
   ],
