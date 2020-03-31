@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Input } from '@angular/core';
+import { Input, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ShaderProgram } from "../../shared/webgl/ShaderProgram";
 import { VertexArrayObject } from "../../shared/webgl/VertexArrayObject";
@@ -12,8 +12,7 @@ import { Rt1InOneWeekend, Rt1InOneWeekendImageData } from '../model/rt1_models'
 })
 export class Rt1View implements OnInit {
   @Input() raytrace: Rt1InOneWeekend;
-  private raytracecanvas: any;
-  private raytraceImageName: string;
+  @ViewChild('ray_trace_canvas', { static: true }) raytracecanvas: ElementRef<HTMLCanvasElement>;
   private raytraceimage: any;
   private canvasSize: number[];
   private gl: any;
@@ -26,10 +25,10 @@ export class Rt1View implements OnInit {
   }
 
   ngOnInit(): void {
-    this.raytraceImageName = "data:image/png;base64," + this.raytrace.imagePng;
+    const raytraceImageName = "data:image/png;base64," + this.raytrace.imagePng;
     this.raytraceimage = new Image();
     this.raytraceimage.onload = (): void => { this.createTexture(this.raytraceimage); }
-    this.raytraceimage.src = this.raytraceImageName;
+    this.raytraceimage.src = raytraceImageName;
   }
 
   ngAfterViewInit(): void {
@@ -39,7 +38,8 @@ export class Rt1View implements OnInit {
   }
 
   resize(): void {
-    this.canvasSize = [this.raytracecanvas.width, this.raytracecanvas.height];
+    const canvas = this.raytracecanvas.nativeElement;
+    this.canvasSize = [canvas.width, canvas.height];
   }
 
   refreshCanvas(): void {
@@ -73,9 +73,9 @@ export class Rt1View implements OnInit {
   }
 
   initCanvas(): void {
-    this.raytracecanvas = document.getElementById("raytracecanvas");
-    this.canvasSize = [this.raytracecanvas.width, this.raytracecanvas.height];
-    this.gl = this.raytracecanvas.getContext("webgl2");
+    const canvas = this.raytracecanvas.nativeElement;
+    this.canvasSize = [canvas.width, canvas.height];
+    this.gl = canvas.getContext("webgl2");
 
     const vertexShader: any = `
     precision highp float;
