@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Rt1InOneWeekend } from './model/rt1_models'
 
@@ -6,7 +6,8 @@ import { Rt1InOneWeekend } from './model/rt1_models'
   selector: 'app-rt1_in_one_weekend',
   templateUrl: './rt1_in_one_weekend.component.html',
 })
-export class Rt1InOneWeekendComponent {
+export class Rt1InOneWeekendComponent implements OnInit {
+  private raytraceview: any;
   public raytrace: Rt1InOneWeekend;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {

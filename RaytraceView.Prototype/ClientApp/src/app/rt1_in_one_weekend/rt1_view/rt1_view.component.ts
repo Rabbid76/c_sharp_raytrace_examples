@@ -5,6 +5,7 @@ import { ShaderProgram } from "../../shared/webgl/ShaderProgram";
 import { VertexArrayObject } from "../../shared/webgl/VertexArrayObject";
 import { Texture } from "../../shared/webgl/Texture";
 import { Rt1InOneWeekend, Rt1InOneWeekendImageData } from '../model/rt1_models'
+import { Rt1Service } from '../../services/rt1_raytrace.service';
 
 @Component({
   selector: 'app-rt1_in_one_weekend-rt1_view',
@@ -22,10 +23,14 @@ export class Rt1View implements OnInit {
   private progressText: string;
   private running: boolean = false;
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
+  constructor(
+    private service: Rt1Service,
+    private http: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string) {
   }
 
   ngOnInit(): void {
+    this.service.view = this;
     const raytraceImageName = "data:image/png;base64," + this.raytrace.imagePng;
     this.raytraceimage = new Image();
     this.raytraceimage.onload = (): void => { this.createTexture(this.raytraceimage); }
@@ -39,6 +44,17 @@ export class Rt1View implements OnInit {
   ngAfterViewInit(): void {
     this.initCanvas();
     window.onresize = () => { this.resize(); }
+  }
+
+  startRayTrace(): void {
+    this.running = false;
+    this.http.get<Rt1InOneWeekend>(this.baseUrl + 'rt1inoneweekend').subscribe(result => {
+      const raytrace = result;
+      const raytraceImageName = "data:image/png;base64," + raytrace.imagePng;
+      this.raytraceimage = new Image();
+      this.raytraceimage.onload = (): void => { this.createTexture(this.raytraceimage); }
+      this.raytraceimage.src = raytraceImageName;
+    }, error => console.error(error));
   }
 
   resize(): void {

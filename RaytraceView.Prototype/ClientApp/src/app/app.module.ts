@@ -9,7 +9,9 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { Rt1InOneWeekendComponent } from './rt1_in_one_weekend/rt1_in_one_weekend.component';
+import { Rt1Controls } from './rt1_in_one_weekend/rt1_controls/rt1_controls.component';
 import { Rt1View } from './rt1_in_one_weekend/rt1_view/rt1_view.component';
+import { Rt1Service } from './services/rt1_raytrace.service';
 import { HealthCheckComponent } from './health-check/health-check.component';
 
 @NgModule({
@@ -18,6 +20,7 @@ import { HealthCheckComponent } from './health-check/health-check.component';
     NavMenuComponent,
     HomeComponent,
     Rt1InOneWeekendComponent,
+    Rt1Controls,
     Rt1View, 
     AboutComponent,
     HealthCheckComponent
@@ -33,7 +36,7 @@ import { HealthCheckComponent } from './health-check/health-check.component';
       { path: 'health-check', component: HealthCheckComponent }
     ])
   ],
-  providers: [],
+  providers: [Rt1Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
