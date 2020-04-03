@@ -37,6 +37,8 @@ namespace RaytraceView.Prototype.Controllers
 
         public void StartRayTrace()
         {
+            TerminateRayTrace();
+            pixelData = new List<PixelData>();
             var rayTraceConfguration = new RayTraceConfigurationModel
             {
                 Width = 600,

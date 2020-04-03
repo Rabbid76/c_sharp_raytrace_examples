@@ -20,6 +20,7 @@ export class Rt1View implements OnInit {
   private bufQuad: any;
   private texture: any;
   private progressText: string;
+  private running: boolean = false;
 
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
   }
@@ -31,10 +32,13 @@ export class Rt1View implements OnInit {
     this.raytraceimage.src = raytraceImageName;
   }
 
+  ngOnDestroy(): void {
+    this.running = false;
+  }
+
   ngAfterViewInit(): void {
     this.initCanvas();
     window.onresize = () => { this.resize(); }
-    this.refreshCanvas();
   }
 
   resize(): void {
@@ -48,11 +52,13 @@ export class Rt1View implements OnInit {
 
   createTexture(raytraceimage: any): void {
     this.texture = new Texture(this.gl, raytraceimage);
-    this.refreshCanvas();
+    this.running = true;
     requestAnimationFrame((deltaMS: number) => { this.updateData(deltaMS); });
   }
 
   updateData(deltaMS: number): void {
+    if (!this.running)
+      return;
     this.http.get<Rt1InOneWeekendImageData>(this.baseUrl + 'rt1inoneweekendimagedata').subscribe(result => {
       const pixelData = result.pixelData;
       if (pixelData) {
