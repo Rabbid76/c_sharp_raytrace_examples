@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Rt1Service } from '../../services/rt1_raytrace.service';
 
