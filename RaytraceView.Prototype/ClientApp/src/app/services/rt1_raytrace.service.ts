@@ -12,11 +12,11 @@ import { PixelData } from '../shared/model/type_models';
 export class Rt1Service {
   public controls: Rt1Controls = null;
   public view: RayTraceView = null;
-  private raytraceimage: any;
+  private raytraceimage: HTMLImageElement;
   private gl: any;
-  private progDraw: any;
-  private bufQuad: any;
-  private texture: any;
+  private progDraw: ShaderProgram;
+  private bufQuad: VertexArrayObject;
+  private texture: Texture;
   private running = false;
 
   constructor(
@@ -122,19 +122,19 @@ export class Rt1Service {
       ]);
     if (!this.progDraw.progObj)
       return null;
-    this.progDraw.inPos = this.progDraw.attrI("inPos");
-    this.progDraw.inUV = this.progDraw.attrI("inUV");
-    this.progDraw.invalid = true;
-
+    const inPos = this.progDraw.attrI("inPos");
+    const inUV = this.progDraw.attrI("inUV");
+    
     this.bufQuad = new VertexArrayObject(this.gl,
-      [{ data: [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], attrSize: 3, attrLoc: this.progDraw.inPos },
-      { data: [0, 0, 1, 0, 1, 1, 0, 1], attrSize: 2, attrLoc: this.progDraw.inUV }],
+      [{ data: [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], attrSize: 3, attrLoc: inPos },
+        { data: [0, 0, 1, 0, 1, 1, 0, 1], attrSize: 2, attrLoc: inUV }],
       [0, 1, 2, 0, 2, 3]);
   }
 
   private drawCanvas(deltaMS: number): void {
-    if (!this.view)
+    if (!this.view || !this.progDraw || !this.bufQuad)
       return;
+
     const canvas = this.view.getCanvas();
     this.gl.viewport(0, 0, canvas.width, canvas.height);
     this.gl.enable(this.gl.DEPTH_TEST);
@@ -146,11 +146,8 @@ export class Rt1Service {
       this.texture.bind(0);
 
     // set up draw shader
-    if (this.progDraw.invalid) {
-      this.progDraw.invalid = false;
-      this.progDraw.use();
-      this.progDraw.setI1("u_texture", 0);
-    }
+    this.progDraw.use();
+    this.progDraw.setI1("u_texture", 0);
 
     // draw scene
     this.bufQuad.draw();
