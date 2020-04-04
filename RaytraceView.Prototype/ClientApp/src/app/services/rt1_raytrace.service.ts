@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Rt1Controls } from '../rt1_in_one_weekend/rt1_controls/rt1_controls.component';
 import { RayTraceView } from '../shared/interfaces/IRayTraceView';
+import { Rt1InOneWeekend, Rt1InOneWeekendImageData } from './model/rt1_models';
 import { ShaderProgram } from "../shared/webgl/ShaderProgram";
 import { VertexArrayObject } from "../shared/webgl/VertexArrayObject";
 import { Texture } from "../shared/webgl/Texture";
@@ -17,17 +19,27 @@ export class Rt1Service {
   private texture: any;
   private running = false;
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string) { }
 
   public startRayTrace(): void {
     if (!this.view)
       return;
     this.running = false;
-    this.view.startRayTrace();
+    this.initRayTrace((raytrace: Rt1InOneWeekend) => {
+      this.initView(raytrace.imagePng);
+    });
   }
 
   public stopRayTrace(): void {
     this.running = false;
+  }
+
+  public initRayTrace(setRayTrace: (raytrace: Rt1InOneWeekend) => void): void {
+    this.http.get<Rt1InOneWeekend>(this.baseUrl + 'rt1inoneweekend').subscribe(result => {
+      setRayTrace(result);
+    }, error => console.error(error));
   }
 
   public initView(image: string): void {
@@ -47,11 +59,20 @@ export class Rt1Service {
   private updateData(deltaMS: number): void {
     if (!this.running || !this.view)
       return;
-    this.view.updateView((data: PixelData) => {
-      this.texture.bind(0);
-      this.gl.texSubImage2D(this.gl.TEXTURE_2D, 0, data.x, data.y, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
-        new Uint8Array([data.r, data.g, data.b, 255]));
-    });
+
+    this.http.get<Rt1InOneWeekendImageData>(this.baseUrl + 'rt1inoneweekendimagedata').subscribe(result => {
+      const pixelData = result.pixelData;
+      if (pixelData) {
+        this.texture.bind(0);
+        for (let i = 0; i < pixelData.length; ++i) {
+          const data: PixelData = pixelData[i];
+          this.gl.texSubImage2D(this.gl.TEXTURE_2D, 0, data.x, data.y, 1, 1, this.gl.RGBA, this.gl.UNSIGNED_BYTE,
+            new Uint8Array([data.r, data.g, data.b, 255]));
+        }
+        this.view.setProgress(result.progress);
+      }
+    }, error => console.error(error));
+
     this.refreshCanvas();
 
     setTimeout(() => {
