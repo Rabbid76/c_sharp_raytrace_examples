@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using rt_1_in_one_week.raytrace.Mathematics;
+﻿using rt_1_in_one_week.raytrace.Mathematics;
 
 namespace rt_1_in_one_week.raytrace.Scenes
 {
