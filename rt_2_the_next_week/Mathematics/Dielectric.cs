@@ -3,7 +3,7 @@
 namespace rt_2_the_next_week.Mathematics
 {
     public class Dielectric
-        : IMaterial
+        : Material
     {
         private double _ref_idx;
         private Random _sampler = new Random();
@@ -13,7 +13,7 @@ namespace rt_2_the_next_week.Mathematics
             _ref_idx = ref_idx;
         }
 
-        public bool Scatter(Ray r_in, HitRecord rec, out Vec3 attenuation, out Ray scattered)
+        public override bool Scatter(Ray r_in, HitRecord rec, out Vec3 attenuation, out Ray scattered)
         {
             Vec3 reflected = Vec3.Reflect(r_in.Direction, rec.Normal);
             attenuation = Vec3.Create(1.0);

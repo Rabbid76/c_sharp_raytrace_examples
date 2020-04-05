@@ -25,5 +25,7 @@
             _normal = normal;
             _material = material;
         }
+
+        public void InvertNormal() => _normal = -_normal;
     }
 }

@@ -6,6 +6,7 @@ namespace rt_2_the_next_week.Scenes
     {
         Camera Camera { get; }
         IHitable World { get; }
+        Vec3 Sky(Ray r);
     }
 }
 

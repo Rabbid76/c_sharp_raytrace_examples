@@ -20,6 +20,14 @@ namespace rt_2_the_next_week.Scenes
             World = new BVHNode(hitables, 0, 1);
             Camera = Camera.CreateLookAt(Vec3.Create(0.25, 0.5, 2.2), Vec3.Create(0.1, 0.0, 0), Vec3.Create(0, 1, 0), 45, aspect, 0, 1);
         }
+
+        public Vec3 Sky(Ray r)
+        {
+            var unit_direction = Vec3.Normalize(r.Direction);
+            var t = unit_direction.Y * 0.5 + 0.5;
+            var v = new Vec3(1.0) * (1.0 - t) + new Vec3(0.5, 0.7, 1.0) * t;
+            return v;
+        }
     }
 }
 
