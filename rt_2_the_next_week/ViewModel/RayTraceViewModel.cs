@@ -59,6 +59,7 @@ namespace rt_2_the_next_week.ViewModel
             scenes.Add(new SceneEntry("Defocus Blur", "2"));
             scenes.Add(new SceneEntry("Checker Texture", "5"));
             scenes.Add(new SceneEntry("Noise Texture", "6"));
+            scenes.Add(new SceneEntry("Globe", "7"));
             scenes.Add(new SceneEntry("Test 1", "3"));
 
             _scenes = new PropertyUpdate<List<SceneEntry>>(scenes, nameof(Scenes), OnPropertyChanged );

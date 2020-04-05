@@ -44,6 +44,7 @@ namespace rt_2_the_next_week.Model
                 case 4: scene = new CoverSceneMotion(aspect); break;
                 case 5: scene = new CheckerTextureScene(aspect); break;
                 case 6: scene = new NoiseTextureScene(aspect); break;
+                case 7: scene = new GlobeScene(aspect); break;
             }
             var rayTracer = new RayTracer(scene);
             var rayTraceTarget = new RayTraceTargetAdapter

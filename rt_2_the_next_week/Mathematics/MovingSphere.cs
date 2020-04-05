@@ -72,7 +72,9 @@ namespace rt_2_the_next_week.Mathematics
                     //var p = r.PointAt(temp);
                     //rec = new HitRecord(temp, p, (p - center) / _radius, _material);
                     (double px, double py, double pz) = (ox + dx * temp, oy + dy * temp, oz + dz * temp);
-                    rec = new HitRecord(temp, Vec3.Create(px, py, pz), Vec3.Create(px - cptx, py - cpty, pz - cptz) / _radius, _material);
+                    var p = Vec3.Create(px, py, pz);
+                    (double u, double v) = Function.GetSphereUV(p / _radius);
+                    rec = new HitRecord(temp, u, v, p, Vec3.Create(px - cptx, py - cpty, pz - cptz) / _radius, _material);
                     return true;
                 }
             }
