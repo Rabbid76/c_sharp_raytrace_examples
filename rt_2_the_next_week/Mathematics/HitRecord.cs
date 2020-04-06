@@ -27,5 +27,6 @@
         }
 
         public void InvertNormal() => _normal = -_normal;
+        public void Displace(Vec3 offset) => _p += offset;
     }
 }

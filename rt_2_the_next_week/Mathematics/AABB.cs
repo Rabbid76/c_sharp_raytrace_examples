@@ -28,6 +28,13 @@ namespace rt_2_the_next_week.Mathematics
             return new AABB(small, big);
         }
 
+        public static AABB operator |(AABB a, Vec3 b)
+        {
+            Vec3 small = Vec3.Create(ffmin(a.Min.X, b.X), ffmin(a.Min.Y, b.Y), ffmin(a.Min.Z, b.Z));
+            Vec3 big = Vec3.Create(ffmax(a.Max.X, b.X), ffmax(a.Max.Y, b.Y), ffmax(a.Max.Z, b.Z));
+            return new AABB(small, big);
+        }
+
         public bool Hit(Ray r, double t_min, double t_max)
         {
             for (int a = 0; a < 3; ++ a)
