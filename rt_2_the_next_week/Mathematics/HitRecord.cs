@@ -9,7 +9,7 @@
         private Vec3 _normal;
         private IMaterial _material;
 
-        public double T { get => _t; }
+        public double T { get => _t; set => _t = value; }
         public double U { get => _u; }
         public double V { get => _v; }
         public Vec3 P { get => _p; }

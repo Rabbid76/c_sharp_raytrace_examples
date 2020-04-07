@@ -47,6 +47,7 @@ namespace rt_2_the_next_week.Model
                 case 7: scene = new GlobeScene(aspect); break;
                 case 8: scene = new SimpleLightScene(aspect); break;
                 case 9: scene = new RoomScene(aspect); break;
+                case 10: scene = new VolumeScene(aspect); break;
             }
             var rayTracer = new RayTracer(scene);
             var rayTraceTarget = new RayTraceTargetAdapter

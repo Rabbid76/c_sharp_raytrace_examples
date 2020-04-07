@@ -53,6 +53,7 @@ namespace rt_2_the_next_week.ViewModel
         public RayTraceViewModel()
         {
             List<SceneEntry> scenes = new List<SceneEntry>();
+            scenes.Add(new SceneEntry("Volume", "10"));
             scenes.Add(new SceneEntry("Room", "9"));
             scenes.Add(new SceneEntry("Simple Light", "8"));
             scenes.Add(new SceneEntry("Checker Texture", "5"));
