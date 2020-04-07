@@ -4,13 +4,13 @@ using rt_2_the_next_week.Mathematics;
 
 namespace rt_2_the_next_week.Scenes
 {
-    public class CoverScene
+    public class CoverSceneRT1
         : IScene
     {
         public Camera Camera { get; }
         public IHitable World { get; }
 
-        public CoverScene(double aspect)
+        public CoverSceneRT1(double aspect)
         {
             var sampler = new Random();
             List<IHitable> hitables = new List<IHitable>();

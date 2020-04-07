@@ -53,14 +53,15 @@ namespace rt_2_the_next_week.ViewModel
         public RayTraceViewModel()
         {
             List<SceneEntry> scenes = new List<SceneEntry>();
+            scenes.Add(new SceneEntry("Cover scene RT 2", "11"));
             scenes.Add(new SceneEntry("Volume", "10"));
             scenes.Add(new SceneEntry("Room", "9"));
             scenes.Add(new SceneEntry("Simple Light", "8"));
             scenes.Add(new SceneEntry("Checker Texture", "5"));
             scenes.Add(new SceneEntry("Noise Texture", "6"));
             scenes.Add(new SceneEntry("Globe", "7"));
-            scenes.Add(new SceneEntry("Cover scene 1", "0"));
-            scenes.Add(new SceneEntry("Cover scene 1 motion", "4"));
+            scenes.Add(new SceneEntry("Cover scene RT 1", "0"));
+            scenes.Add(new SceneEntry("Cover scene RT 1 motion", "4"));
             scenes.Add(new SceneEntry("Materials", "1"));
             scenes.Add(new SceneEntry("Defocus Blur", "2"));
             scenes.Add(new SceneEntry("Test 1", "3"));
