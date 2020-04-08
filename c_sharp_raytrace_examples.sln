@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rt_1_in_one_week", "rt_1_in
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rt_1_in_one_week.raytrace", "rt_1_in_one_week.raytrace\rt_1_in_one_week.raytrace.csproj", "{AD38BD43-F89F-4514-82FF-07F2A8A6CC43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rt_2_the_next_week.raytrace", "rt_2_the_next_week.raytrace\rt_2_the_next_week.raytrace.csproj", "{9BAF826D-A208-4352-B2FB-3CC560C86F36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{AD38BD43-F89F-4514-82FF-07F2A8A6CC43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD38BD43-F89F-4514-82FF-07F2A8A6CC43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD38BD43-F89F-4514-82FF-07F2A8A6CC43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BAF826D-A208-4352-B2FB-3CC560C86F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BAF826D-A208-4352-B2FB-3CC560C86F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BAF826D-A208-4352-B2FB-3CC560C86F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BAF826D-A208-4352-B2FB-3CC560C86F36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

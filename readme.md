@@ -33,6 +33,14 @@ Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) boo
 
 ![cover scene](documentation/image/rt_2_the_next_week/noise_texture_marble.png)
 
+### Simple Room
+
+![simple room](documentation/image/rt_2_the_next_week/simple_room.png)
+
+### Volume
+
+![volume](documentation/image/rt_2_the_next_week/volume.png)
+
 ---
 
 Recommended

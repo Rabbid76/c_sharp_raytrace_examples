@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using rt_2_the_next_week.ViewModel;
-using rt_2_the_next_week.Mathematics;
-using rt_2_the_next_week.Scenes;
 using ray_tracing_modules.Color;
 using ray_tracing_modules.Process;
 using ray_tracing_modules.RayTraycer.Model;
+using rt_2_the_next_week.raytrace.Interfaces;
+using rt_2_the_next_week.raytrace.Scenes;
+using rt_2_the_next_week.raytrace.RayTracer;
 
 namespace rt_2_the_next_week.Model
 {

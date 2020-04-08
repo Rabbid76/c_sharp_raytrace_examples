@@ -1,10 +1,10 @@
 ﻿using System;
 using ray_tracing_modules.Color;
 using ray_tracing_modules.RayTraycer.Interfaces;
-using rt_1_in_one_week.raytrace.Mathematics;
-using rt_1_in_one_week.raytrace.Scenes;
+using rt_2_the_next_week.raytrace.Interfaces;
+using rt_2_the_next_week.raytrace.Mathematics;
 
-namespace rt_1_in_one_week.raytrace.RayTracer
+namespace rt_2_the_next_week.raytrace.RayTracer
 {
     public class RayTracer
         : IRayTracer
@@ -29,20 +29,14 @@ namespace rt_1_in_one_week.raytrace.RayTracer
             {
                 Ray scattered;
                 Vec3 attenuation;
+                var emitted = rec.Material.Emitted(rec.U, rec.V, rec.P);
                 if (depth < 50 && rec.Material.Scatter(r, rec, out attenuation, out scattered))
                 {
-                    return attenuation * RaytraceColor(scattered, hitable, depth + 1);
+                    return emitted + attenuation * RaytraceColor(scattered, hitable, depth + 1);
                 }
-                return Vec3.Create(0.0);
+                return emitted;
             }
-            return CreateSky(r);
-        }
-        private Vec3 CreateSky(Ray r)
-        {
-            var unit_direction = Vec3.Normalize(r.Direction);
-            var t = unit_direction.Y * 0.5 + 0.5;
-            var v = new Vec3(1.0) * (1.0 - t) + new Vec3(0.5, 0.7, 1.0) * t;
-            return v;
+            return scene.Sky(r);
         }
     }
 }

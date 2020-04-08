@@ -7,19 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resource\worldmap1.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resource\worldmap1.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ray_tracing_modules\ray_tracing_modules.csproj" />
+    <ProjectReference Include="..\rt_2_the_next_week.raytrace\rt_2_the_next_week.raytrace.csproj" />
     <ProjectReference Include="..\WpfViewModelModule\WpfViewModelModule.csproj" />
   </ItemGroup>
 
