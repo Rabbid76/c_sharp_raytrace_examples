@@ -7,6 +7,7 @@ import { Rt1Service } from '../services/rt1_raytrace.service';
 @Component({
   selector: 'app-rt1_in_one_weekend',
   templateUrl: './rt1_in_one_weekend.component.html',
+  styleUrls: ['./rt1_in_one_weekend.component.css']
 })
 export class Rt1InOneWeekendComponent implements OnInit {
   public raytrace: Rt1InOneWeekend;
