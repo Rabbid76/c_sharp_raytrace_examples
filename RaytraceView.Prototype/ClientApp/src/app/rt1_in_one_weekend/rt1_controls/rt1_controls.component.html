@@ -1,1 +1,7 @@
-<button (click)="onApply()">Apply</button>
+<div [formGroup]="form" (ngSubmit)="onSubmit()">
+  <p><button (click)="onSubmit()">Apply</button></p>
+  <p><input type="text" formControlName="width" required/></p>
+  <p><input type="text" formControlName="height" required/></p>
+  <p><input type="text" formControlName="samples" required/></p>
+  <p><input type="range" id="updaterate" min="0" max="100"/></p>
+</div>

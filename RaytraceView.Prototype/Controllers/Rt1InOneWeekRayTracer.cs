@@ -20,6 +20,8 @@ namespace RaytraceView.Prototype.Controllers
         private List<PixelData> pixelData = new List<PixelData>();
         private static Rt1InOneWeekRayTracer rayTracer;
 
+        public Rt1InOneWeekendParameterModel Parameter { get; set; }
+
         public static Rt1InOneWeekRayTracer RayTracerSingleton()
         {
             if (rayTracer == null)
@@ -28,7 +30,15 @@ namespace RaytraceView.Prototype.Controllers
         }
 
         public Rt1InOneWeekRayTracer()
-        { }
+        {
+            Parameter = new Rt1InOneWeekendParameterModel
+            {
+                Width = 600,
+                Height = 300,
+                Samples = 100,
+                UpdateRate = 0.1
+            };
+        }
 
         ~Rt1InOneWeekRayTracer()
         {
@@ -41,10 +51,10 @@ namespace RaytraceView.Prototype.Controllers
             pixelData = new List<PixelData>();
             var rayTraceConfguration = new RayTraceConfigurationModel
             {
-                Width = 600,
-                Height = 300,
-                Samples = 1000,
-                UpdateRate = 0.1,
+                Width = Parameter.Width,
+                Height = Parameter.Height,
+                Samples = Parameter.Samples,
+                UpdateRate = Parameter.UpdateRate,
             };
             var sceneType = 0;
             var aspect = (double)rayTraceConfguration.Width / (double)rayTraceConfguration.Height;

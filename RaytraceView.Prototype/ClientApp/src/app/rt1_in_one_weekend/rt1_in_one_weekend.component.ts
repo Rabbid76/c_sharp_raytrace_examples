@@ -10,6 +10,8 @@ import { Rt1Service } from '../services/rt1_raytrace.service';
   styleUrls: ['./rt1_in_one_weekend.component.css']
 })
 export class Rt1InOneWeekendComponent implements OnInit {
+  public viewvalid: boolean;
+  public title = "";
   public raytrace: Rt1InOneWeekend;
 
   constructor(
@@ -23,6 +25,8 @@ export class Rt1InOneWeekendComponent implements OnInit {
   ngOnInit(): void {
     this.service.initRayTrace((raytrace: Rt1InOneWeekend) => {
       this.raytrace = raytrace;
+      this.title = this.raytrace.title;
+      this.viewvalid = true;
     });
   }
 }

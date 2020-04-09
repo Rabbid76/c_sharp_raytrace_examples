@@ -4,5 +4,6 @@
     {
         public string Title { get; set; }
         public string ImagePng { get; set; }
+        public Rt1InOneWeekendParameterModel Parameter { get; set; }
     }
 }

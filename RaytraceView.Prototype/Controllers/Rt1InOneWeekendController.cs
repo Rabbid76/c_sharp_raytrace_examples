@@ -23,25 +23,40 @@ namespace RaytraceView.Prototype.Controllers
             rayTracer?.StartRayTrace();
         }
 
+        [HttpPut]
+        public IActionResult Put(ViewModel.Rt1InOneWeekendParameterModel parameter)
+        {
+            rayTracer.Parameter = parameter;
+            rayTracer?.StartRayTrace();
+            return Accepted();
+        }
+
         [HttpGet]
         public ViewModel.Rt1InOneWeekendModel Get()
         {
             var image = TestImage();
             var imageBytes = ImageToByteArray(image);
             var imageString = ByteArrayToString(imageBytes);
-
+            var parameter = new ViewModel.Rt1InOneWeekendParameterModel
+            {
+                Width = rayTracer.Parameter.Width,
+                Height = rayTracer.Parameter.Height,
+                Samples = rayTracer.Parameter.Samples,
+                UpdateRate = rayTracer.Parameter.UpdateRate
+            };
             var model = new ViewModel.Rt1InOneWeekendModel
             {
                 Title = "Ray Tracing in One Weekend",
-                ImagePng = imageString
+                ImagePng = imageString,
+                Parameter = parameter
             };
             return model;
         }
 
         private Image TestImage()
         {
-            int cx = 600;
-            int cy = 300;
+            int cx = rayTracer.Parameter.Width;
+            int cy = rayTracer.Parameter.Height;
             var bitmap = new Bitmap(cx, cy);
             for (int x = 0; x < cx; ++x)
             {

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { FormControl, ReactiveFormsModule } from '@angular/forms'
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -34,7 +35,8 @@ import { HealthCheckComponent } from './health-check/health-check.component';
       { path: 'rt1_in_one_weekend', component: Rt1InOneWeekendComponent },
       { path: 'about', component: AboutComponent },
       { path: 'health-check', component: HealthCheckComponent }
-    ])
+    ]),
+    ReactiveFormsModule,
   ],
   providers: [Rt1Service],
   bootstrap: [AppComponent]

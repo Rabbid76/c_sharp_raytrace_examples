@@ -29,7 +29,7 @@ export class Rt1View implements OnInit, RayTraceView {
 
   ngOnInit(): void {
     this.service.view = this;
-    this.service.initView(this.raytrace.imagePng);
+    this.service.initView(this.service.raytrace.imagePng);
   }
 
   ngOnDestroy(): void {

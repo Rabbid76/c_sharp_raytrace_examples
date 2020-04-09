@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Rt1Controls } from '../rt1_in_one_weekend/rt1_controls/rt1_controls.component';
 import { RayTraceView } from '../shared/interfaces/IRayTraceView';
-import { Rt1InOneWeekend, Rt1InOneWeekendImageData } from './model/rt1_models';
+import { Rt1InOneWeekend, Rt1InOneWeekendParameter, Rt1InOneWeekendImageData } from './model/rt1_models';
 import { ShaderProgram } from "../shared/webgl/ShaderProgram";
 import { VertexArrayObject } from "../shared/webgl/VertexArrayObject";
 import { Texture } from "../shared/webgl/Texture";
@@ -12,6 +12,7 @@ import { PixelData } from '../shared/model/type_models';
 export class Rt1Service {
   public controls: Rt1Controls = null;
   public view: RayTraceView = null;
+  public raytrace: Rt1InOneWeekend;
   private raytraceimage: HTMLImageElement;
   private gl: any;
   private progDraw: ShaderProgram;
@@ -23,22 +24,27 @@ export class Rt1Service {
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string) { }
 
-  public startRayTrace(): void {
+  public startRayTrace(parameter: Rt1InOneWeekendParameter): void {
     if (!this.view)
       return;
     this.running = false;
-    this.initRayTrace((raytrace: Rt1InOneWeekend) => {
-      this.initView(raytrace.imagePng);
-    });
+
+    this.http.put<Rt1InOneWeekendParameter>(this.baseUrl + 'rt1inoneweekend', parameter).subscribe(result => {
+
+      this.initRayTrace((raytrace: Rt1InOneWeekend) => {
+        this.initView(raytrace.imagePng);
+      });
+    }, error => console.log(error));
   }
 
   public stopRayTrace(): void {
     this.running = false;
   }
 
-  public initRayTrace(setRayTrace: (raytrace: Rt1InOneWeekend) => void): void {
+  public initRayTrace(initRayTraceCallback: (raytrace: Rt1InOneWeekend) => void): void {
     this.http.get<Rt1InOneWeekend>(this.baseUrl + 'rt1inoneweekend').subscribe(result => {
-      setRayTrace(result);
+      this.raytrace = result;
+      initRayTraceCallback(this.raytrace);
     }, error => console.error(error));
   }
 
@@ -52,6 +58,11 @@ export class Rt1Service {
 
   private createTexture(raytraceimage: any): void {
     this.texture = new Texture(this.gl, raytraceimage);
+    const canvas = this.view.getCanvas();
+    if (canvas) {
+      canvas.width = this.raytrace.parameter.width;
+      canvas.height = this.raytrace.parameter.height;
+    }
     this.running = true;
     requestAnimationFrame((deltaMS: number) => { this.updateData(deltaMS); });
   }
