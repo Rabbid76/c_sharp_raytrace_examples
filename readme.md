@@ -41,6 +41,10 @@ Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) boo
 
 ![volume](documentation/image/rt_2_the_next_week/volume.png)
 
+### Cover Scene
+
+![cover scene](documentation/image/rt_2_the_next_week/cover_scene_2.png)
+
 ---
 
 Recommended
