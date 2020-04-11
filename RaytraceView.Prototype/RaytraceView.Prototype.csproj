@@ -51,7 +51,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ray_tracing_modules\ray_tracing_modules.csproj" />
-    <ProjectReference Include="..\rt_1_in_one_week.raytrace\rt_1_in_one_week.raytrace.csproj" />
+    <ProjectReference Include="..\rt_2_the_next_week.raytrace\rt_2_the_next_week.raytrace.csproj" />
   </ItemGroup>
 
   <ItemGroup>

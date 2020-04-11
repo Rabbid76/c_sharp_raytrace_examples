@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using rt_1_in_one_week.raytrace.Scenes;
+using rt_2_the_next_week.raytrace.Interfaces;
+using rt_2_the_next_week.raytrace.Scenes;
 using ray_tracing_modules.Color;
 using ray_tracing_modules.Process;
 using ray_tracing_modules.RayTraycer.Model;
@@ -17,7 +17,9 @@ namespace RaytraceView.Prototype.Controllers
         private readonly object rayTraceLock = new object();
         private double progress;
         private List<PixelData> pixelData = new List<PixelData>();
-        private string[] scenes = new string[] { "Cover scene", "Materials", "Defocus Blur", "Test" };
+        private string[] scenes = new string[] {
+            "Cover scene RT 2", "Simple Light", "Room", "Volume", "Checker Texture", "Noise Texture", "Globe",
+            "Cover scene RT 1","Cover scene RT 1 motion", "Materials", "Defocus Blur", "Test"};
 
         public string[] Scenes { get => scenes; }
         public RayTraceParameterModel Parameter { get; set; }
@@ -63,12 +65,20 @@ namespace RaytraceView.Prototype.Controllers
             switch (sceneType)
             {
                 default:
-                case 0: scene = new CoverScene(aspect); break;
-                case 1: scene = new MaterialsScene(aspect); break;
-                case 2: scene = new DefocusBlurScene(aspect); break;
-                case 3: scene = new TestScene(aspect); break;
+                case 0: scene = new CoverSceneRT2(aspect); break;
+                case 1: scene = new SimpleLightScene(aspect); break;
+                case 2: scene = new RoomScene(aspect); break;
+                case 3: scene = new VolumeScene(aspect); break;
+                case 4: scene = new CheckerTextureScene(aspect); break;
+                case 5: scene = new NoiseTextureScene(aspect); break;
+                case 6: scene = new GlobeScene(aspect); break;
+                case 7: scene = new CoverSceneRT1(aspect); break;
+                case 8: scene = new CoverSceneRT1Motion(aspect); break;
+                case 9: scene = new MaterialsScene(aspect); break;
+                case 10: scene = new DefocusBlurScene(aspect); break;
+                case 11: scene = new TestScene(aspect); break;
             }
-            var rayTracer = new rt_1_in_one_week.raytrace.RayTracer.RayTracer(scene);
+            var rayTracer = new rt_2_the_next_week.raytrace.RayTracer.RayTracer(scene);
             var rayTraceTarget = new RayTraceTargetAdapter
             (
                 progress => this.progress = progress,

@@ -1,10 +1,10 @@
 <div [formGroup]="form" (ngSubmit)="onSubmit()">
-  <p><button (click)="onSubmit()">Apply</button></p>
-  <p><select formControlName="sceneName" required>
+  <p><button (click)="onSubmit()" title="Apply settings and restart ray tracing">Apply</button></p>
+  <p><select formControlName="sceneName" required title="Scene">
       <option *ngFor="let scene of scenes" [ngValue]="scene">{{ scene }}</option>
     </select></p>
-  <p><input type="text" formControlName="width" required /></p>
-  <p><input type="text" formControlName="height" required /></p>
-  <p><input type="text" formControlName="samples" required /></p>
-  <p><input type="range" formControlName="updaterate" min="0" max="100" /></p>
+  <p><input type="text" formControlName="width" required title="Width"/></p>
+  <p><input type="text" formControlName="height" required title="Height" /></p>
+  <p><input type="text" formControlName="samples" required title="Samples"/></p>
+  <p><input type="range" formControlName="updaterate" min="0" max="100" title="Update rate"/></p>
 </div>

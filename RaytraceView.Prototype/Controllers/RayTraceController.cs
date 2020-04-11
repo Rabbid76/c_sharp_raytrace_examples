@@ -44,7 +44,7 @@ namespace RaytraceView.Prototype.Controllers
             };
             var model = new ViewModel.RayTraceModel
             {
-                Title = "Ray Tracing in One Weekend",
+                Title = "Ray Tracing: The next week",
                 ImagePng = imageString,
                 Scenes = rayTracer.Scenes,
                 Parameter = parameter
