@@ -2,21 +2,21 @@ import { Component, OnInit } from '@angular/core';
 //import { Inject } from '@angular/core';
 import { Input, ViewChild, ElementRef } from '@angular/core';
 //import { HttpClient } from '@angular/common/http';
-import { Rt1InOneWeekend } from '../../services/model/rt1_models'
-import { Rt1Service } from '../../services/rt1_raytrace.service';
+import { RayTraceModel } from '../../services/model/raytracemodels'
+import { RayTraceService } from '../../services/raytrace.service';
 import { RayTraceView } from "../../shared/interfaces/IRayTraceView";
 
 @Component({
-  selector: 'app-rt1_in_one_weekend-rt1_view',
-  templateUrl: './rt1_view.component.html',
+  selector: 'app-raytrace-view',
+  templateUrl: './raytraceview.component.html',
 })
-export class Rt1View implements OnInit, RayTraceView {
-  @Input() raytrace: Rt1InOneWeekend;
+export class RayTraceViewComponent implements OnInit, RayTraceView {
+  @Input() raytrace: RayTraceModel;
   @ViewChild('ray_trace_canvas', { static: true }) raytracecanvas: ElementRef<HTMLCanvasElement>;
   public progressText: string;
 
   constructor(
-    private service: Rt1Service,
+    private service: RayTraceService,
     //private http: HttpClient,
     //@Inject('BASE_URL') private baseUrl: string
   ) { }

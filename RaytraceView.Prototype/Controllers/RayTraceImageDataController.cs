@@ -9,19 +9,19 @@ namespace RaytraceView.Prototype.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class Rt1InOneWeekendImageDataController
+    public class RayTraceImageDataController
     {
-        private readonly ILogger<Rt1InOneWeekendImageDataController> logger;
-        private readonly Rt1InOneWeekRayTracer rayTracer;
+        private readonly ILogger<RayTraceImageDataController> logger;
+        private readonly RayTracer rayTracer;
 
-        public Rt1InOneWeekendImageDataController(ILogger<Rt1InOneWeekendImageDataController> logger)
+        public RayTraceImageDataController(ILogger<RayTraceImageDataController> logger)
         {
             this.logger = logger;
-            rayTracer = Rt1InOneWeekRayTracer.RayTracerSingleton();
+            rayTracer = RayTracer.RayTracerSingleton();
         }
 
         [HttpGet]
-        public ViewModel.Rt1InOneWeekendImageDataModel Get()
+        public ViewModel.RayTraceImageDataModel Get()
         {
             var model = rayTracer?.GetPixelData();
             return model;

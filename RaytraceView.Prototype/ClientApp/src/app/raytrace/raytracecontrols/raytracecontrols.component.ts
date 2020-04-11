@@ -1,20 +1,20 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Rt1Service } from '../../services/rt1_raytrace.service';
+import { RayTraceService } from '../../services/raytrace.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Rt1InOneWeekendParameter } from '../../services/model/rt1_models';
+import { RayTraceParameter } from '../../services/model/raytracemodels';
 
 @Component({
-  selector: 'app-rt1_in_one_weekend-rt1_controls',
-  templateUrl: './rt1_controls.component.html',
-  styleUrls: ['./rt1_controls.component.css']
+  selector: 'app-raytrace-controls',
+  templateUrl: './raytracecontrols.component.html',
+  styleUrls: ['./raytracecontrols.component.css']
 })
-export class Rt1Controls {
+export class RayTraceControlsComponent {
   form: FormGroup;
   scenes: string[];
 
   constructor(
-    private service: Rt1Service,
+    private service: RayTraceService,
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string) {
   }
@@ -32,7 +32,7 @@ export class Rt1Controls {
   }
 
   onSubmit() {
-    const parameter: Rt1InOneWeekendParameter =
+    const parameter: RayTraceParameter =
     {
       sceneName: this.form.get("sceneName").value,
       width: +this.form.get("width").value,

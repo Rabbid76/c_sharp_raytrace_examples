@@ -9,10 +9,10 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-import { Rt1InOneWeekendComponent } from './rt1_in_one_weekend/rt1_in_one_weekend.component';
-import { Rt1Controls } from './rt1_in_one_weekend/rt1_controls/rt1_controls.component';
-import { Rt1View } from './rt1_in_one_weekend/rt1_view/rt1_view.component';
-import { Rt1Service } from './services/rt1_raytrace.service';
+import { RayTraceComponent } from './raytrace/raytrace.component';
+import { RayTraceControlsComponent } from './raytrace/raytracecontrols/raytracecontrols.component';
+import { RayTraceViewComponent } from './raytrace/raytraceview/raytraceview.component';
+import { RayTraceService } from './services/raytrace.service';
 import { HealthCheckComponent } from './health-check/health-check.component';
 
 @NgModule({
@@ -20,9 +20,9 @@ import { HealthCheckComponent } from './health-check/health-check.component';
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    Rt1InOneWeekendComponent,
-    Rt1Controls,
-    Rt1View, 
+    RayTraceComponent,
+    RayTraceControlsComponent,
+    RayTraceViewComponent, 
     AboutComponent,
     HealthCheckComponent
   ],
@@ -32,13 +32,13 @@ import { HealthCheckComponent } from './health-check/health-check.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'rt1_in_one_weekend', component: Rt1InOneWeekendComponent },
+      { path: 'raytrace', component: RayTraceComponent },
       { path: 'about', component: AboutComponent },
       { path: 'health-check', component: HealthCheckComponent }
     ]),
     ReactiveFormsModule,
   ],
-  providers: [Rt1Service],
+  providers: [RayTraceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

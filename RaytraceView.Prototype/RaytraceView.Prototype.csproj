@@ -25,12 +25,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\app\rt1_in_one_weekend\rt1_controls\rt1_controls.component.ts" />
-    <None Remove="ClientApp\src\app\rt1_in_one_weekend\rt1_view\rt1_view.component.ts" />
-    <None Remove="ClientApp\src\app\rt1_in_one_weekend\ShaderProgram.ts" />
-    <None Remove="ClientApp\src\app\rt1_in_one_weekend\Texture.ts" />
-    <None Remove="ClientApp\src\app\rt1_in_one_weekend\VertexBuffer.ts" />
-    <None Remove="ClientApp\src\app\services\rt1_raytrace.service.ts" />
+    <None Remove="ClientApp\src\app\raytrace\raytraceview\raytraceview.component.ts" />
+    <None Remove="ClientApp\src\app\raytrace\raytracecontrols\raytracecontrols.component.ts" />
+    <None Remove="ClientApp\src\app\raytrace\ShaderProgram.ts" />
+    <None Remove="ClientApp\src\app\raytrace\Texture.ts" />
+    <None Remove="ClientApp\src\app\raytrace\VertexBuffer.ts" />
+    <None Remove="ClientApp\src\app\services\raytrace.service.ts" />
     <None Remove="ClientApp\src\app\shared\interfaces\IRayTraceView.ts" />
     <None Remove="ClientApp\src\app\shared\model\type_models.ts" />
   </ItemGroup>
@@ -55,10 +55,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\services\model\rt1_models.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\rt1_controls\rt1_controls.component.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\rt1_in_one_weekend\rt1_view\rt1_view.component.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\services\rt1_raytrace.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\model\raytracemodels.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\raytrace\raytracecontrols\raytracecontrols.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\raytrace\raytraceview\raytraceview.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\raytrace.service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\shared\interfaces\IRayTraceView.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\shared\model\type_models.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\shared\webgl\ShaderProgram.ts" />

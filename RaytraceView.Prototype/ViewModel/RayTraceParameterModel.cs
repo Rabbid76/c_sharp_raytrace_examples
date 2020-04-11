@@ -1,6 +1,6 @@
 ﻿namespace RaytraceView.Prototype.ViewModel
 {
-    public class Rt1InOneWeekendParameterModel
+    public class RayTraceParameterModel
     {
         public string SceneName { get; set; }
         public int Width { get; set; }

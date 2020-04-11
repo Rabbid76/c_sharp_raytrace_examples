@@ -1,0 +1,8 @@
+<p>{{ title }}</p>
+
+<p *ngIf="!raytrace"><em>Loading...</em></p>
+
+<app-raytrace-controls *ngIf="raytrace">
+</app-raytrace-controls>
+<app-raytrace-view *ngIf="raytrace" [raytrace]="raytrace">
+</app-raytrace-view>

@@ -1,13 +1,13 @@
 import { PixelData } from "../../shared/model/type_models";
 
-export interface Rt1InOneWeekend {
+export interface RayTraceModel {
   title: string;
   imagePng: string;
   scenes: string[];
-  parameter: Rt1InOneWeekendParameter;
+  parameter: RayTraceParameter;
 }
 
-export interface Rt1InOneWeekendParameter {
+export interface RayTraceParameter {
   sceneName: string;
   width: number;
   height: number;
@@ -15,7 +15,7 @@ export interface Rt1InOneWeekendParameter {
   updateRate: number;
 }
 
-export interface Rt1InOneWeekendImageData {
+export interface RayTraceImageData {
   pixelData: PixelData[];
   progress: number;
 }

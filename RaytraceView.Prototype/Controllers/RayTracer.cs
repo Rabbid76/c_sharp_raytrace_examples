@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Drawing;
 using rt_1_in_one_week.raytrace.Scenes;
-using rt_1_in_one_week.raytrace.RayTracer;
 using ray_tracing_modules.Color;
 using ray_tracing_modules.Process;
 using ray_tracing_modules.RayTraycer.Model;
@@ -12,9 +10,9 @@ using RaytraceView.Prototype.ViewModel;
 
 namespace RaytraceView.Prototype.Controllers
 {
-    public class Rt1InOneWeekRayTracer
+    public class RayTracer
     {
-        private static Rt1InOneWeekRayTracer rayTracer;
+        private static RayTracer rayTracer;
         private RayTraceProcess rayTraceProcess;
         private readonly object rayTraceLock = new object();
         private double progress;
@@ -22,18 +20,18 @@ namespace RaytraceView.Prototype.Controllers
         private string[] scenes = new string[] { "Cover scene", "Materials", "Defocus Blur", "Test" };
 
         public string[] Scenes { get => scenes; }
-        public Rt1InOneWeekendParameterModel Parameter { get; set; }
+        public RayTraceParameterModel Parameter { get; set; }
 
-        public static Rt1InOneWeekRayTracer RayTracerSingleton()
+        public static RayTracer RayTracerSingleton()
         {
             if (rayTracer == null)
-                rayTracer = new Rt1InOneWeekRayTracer();
+                rayTracer = new RayTracer();
             return rayTracer;
         }
 
-        public Rt1InOneWeekRayTracer()
+        public RayTracer()
         {
-            Parameter = new Rt1InOneWeekendParameterModel
+            Parameter = new RayTraceParameterModel
             {
                 SceneName = Scenes[0],
                 Width = 600,
@@ -43,7 +41,7 @@ namespace RaytraceView.Prototype.Controllers
             };
         }
 
-        ~Rt1InOneWeekRayTracer()
+        ~RayTracer()
         {
             rayTracer?.TerminateRayTrace();
         }
@@ -70,7 +68,7 @@ namespace RaytraceView.Prototype.Controllers
                 case 2: scene = new DefocusBlurScene(aspect); break;
                 case 3: scene = new TestScene(aspect); break;
             }
-            var rayTracer = new RayTracer(scene);
+            var rayTracer = new rt_1_in_one_week.raytrace.RayTracer.RayTracer(scene);
             var rayTraceTarget = new RayTraceTargetAdapter
             (
                 progress => this.progress = progress,
@@ -101,7 +99,7 @@ namespace RaytraceView.Prototype.Controllers
             }
         }
 
-        public Rt1InOneWeekendImageDataModel GetPixelData()
+        public RayTraceImageDataModel GetPixelData()
         {
             List<PixelData> currentPixelData;
             lock (rayTraceLock)
@@ -109,7 +107,7 @@ namespace RaytraceView.Prototype.Controllers
                 currentPixelData = pixelData;
                 pixelData = new List<PixelData>();
             }
-            var imageDataModel = new Rt1InOneWeekendImageDataModel
+            var imageDataModel = new RayTraceImageDataModel
             {
                 PixelData = currentPixelData.ToArray(),
                 Progress = progress

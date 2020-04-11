@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 //import { Inject } from '@angular/core';
 //import { HttpClient } from '@angular/common/http';
-import { Rt1InOneWeekend } from '../services/model/rt1_models';
-import { Rt1Service } from '../services/rt1_raytrace.service';
+import { RayTraceModel } from '../services/model/raytracemodels';
+import { RayTraceService } from '../services/raytrace.service';
 
 @Component({
-  selector: 'app-rt1_in_one_weekend',
-  templateUrl: './rt1_in_one_weekend.component.html',
-  styleUrls: ['./rt1_in_one_weekend.component.css']
+  selector: 'app-raytrace',
+  templateUrl: './raytrace.component.html',
+  styleUrls: ['./raytrace.component.css']
 })
-export class Rt1InOneWeekendComponent implements OnInit {
+export class RayTraceComponent implements OnInit {
   public viewvalid: boolean;
   public title = "";
-  public raytrace: Rt1InOneWeekend;
+  public raytrace: RayTraceModel;
 
   constructor(
-    private service: Rt1Service,
+    private service: RayTraceService,
     //private http: HttpClient,
     //@Inject('BASE_URL') private baseUrl: string
   ) {}
@@ -23,7 +23,7 @@ export class Rt1InOneWeekendComponent implements OnInit {
   //ngOnChanges, ngOnInit, ngDoChecks, ngAfterContentInit, ngAfterCcontentChecked, ngAfterViewinit, ngAfterViewChecked, ngOnDestroy
 
   ngOnInit(): void {
-    this.service.initRayTrace((raytrace: Rt1InOneWeekend) => {
+    this.service.initRayTrace((raytrace: RayTraceModel) => {
       this.raytrace = raytrace;
       this.title = this.raytrace.title;
       this.viewvalid = true;

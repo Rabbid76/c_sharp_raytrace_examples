@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,20 +8,20 @@ namespace RaytraceView.Prototype.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class Rt1InOneWeekendController : ControllerBase
+    public class RayTraceController : ControllerBase
     {
-        private readonly ILogger<Rt1InOneWeekendController> logger;
-        private readonly Rt1InOneWeekRayTracer rayTracer;
+        private readonly ILogger<RayTraceController> logger;
+        private readonly RayTracer rayTracer;
 
-        public Rt1InOneWeekendController(ILogger<Rt1InOneWeekendController> logger)
+        public RayTraceController(ILogger<RayTraceController> logger)
         {
             this.logger = logger;
-            rayTracer = Rt1InOneWeekRayTracer.RayTracerSingleton();
+            rayTracer = RayTracer.RayTracerSingleton();
             rayTracer?.StartRayTrace();
         }
 
         [HttpPut]
-        public IActionResult Put(ViewModel.Rt1InOneWeekendParameterModel parameter)
+        public IActionResult Put(ViewModel.RayTraceParameterModel parameter)
         {
             rayTracer.Parameter = parameter;
             rayTracer?.StartRayTrace();
@@ -32,12 +29,12 @@ namespace RaytraceView.Prototype.Controllers
         }
 
         [HttpGet]
-        public ViewModel.Rt1InOneWeekendModel Get()
+        public ViewModel.RayTraceModel Get()
         {
             var image = TestImage();
             var imageBytes = ImageToByteArray(image);
             var imageString = ByteArrayToString(imageBytes);
-            var parameter = new ViewModel.Rt1InOneWeekendParameterModel
+            var parameter = new ViewModel.RayTraceParameterModel
             {
                 SceneName = rayTracer.Parameter.SceneName,
                 Width = rayTracer.Parameter.Width,
@@ -45,7 +42,7 @@ namespace RaytraceView.Prototype.Controllers
                 Samples = rayTracer.Parameter.Samples,
                 UpdateRate = rayTracer.Parameter.UpdateRate
             };
-            var model = new ViewModel.Rt1InOneWeekendModel
+            var model = new ViewModel.RayTraceModel
             {
                 Title = "Ray Tracing in One Weekend",
                 ImagePng = imageString,

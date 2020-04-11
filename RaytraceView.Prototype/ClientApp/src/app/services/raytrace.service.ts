@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Rt1Controls } from '../rt1_in_one_weekend/rt1_controls/rt1_controls.component';
+import { RayTraceControlsComponent } from '../raytrace/raytracecontrols/raytracecontrols.component';
 import { RayTraceView } from '../shared/interfaces/IRayTraceView';
-import { Rt1InOneWeekend, Rt1InOneWeekendParameter, Rt1InOneWeekendImageData } from './model/rt1_models';
+import { RayTraceModel, RayTraceParameter, RayTraceImageData } from './model/raytracemodels';
 import { ShaderProgram } from "../shared/webgl/ShaderProgram";
 import { VertexArrayObject } from "../shared/webgl/VertexArrayObject";
 import { Texture } from "../shared/webgl/Texture";
 import { PixelData } from '../shared/model/type_models';
 
 @Injectable()
-export class Rt1Service {
-  public controls: Rt1Controls = null;
+export class RayTraceService {
+  public controls: RayTraceControlsComponent = null;
   public view: RayTraceView = null;
-  public raytrace: Rt1InOneWeekend;
+  public raytrace: RayTraceModel;
   private raytraceimage: HTMLImageElement;
   private gl: any;
   private progDraw: ShaderProgram;
@@ -24,14 +24,14 @@ export class Rt1Service {
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string) { }
 
-  public startRayTrace(parameter: Rt1InOneWeekendParameter): void {
+  public startRayTrace(parameter: RayTraceParameter): void {
     if (!this.view)
       return;
     this.running = false;
 
-    this.http.put<Rt1InOneWeekendParameter>(this.baseUrl + 'rt1inoneweekend', parameter).subscribe(result => {
+    this.http.put<RayTraceParameter>(this.baseUrl + 'raytrace', parameter).subscribe(result => {
 
-      this.initRayTrace((raytrace: Rt1InOneWeekend) => {
+      this.initRayTrace((raytrace: RayTraceModel) => {
         this.initView(raytrace.imagePng);
       });
     }, error => console.log(error));
@@ -41,8 +41,8 @@ export class Rt1Service {
     this.running = false;
   }
 
-  public initRayTrace(initRayTraceCallback: (raytrace: Rt1InOneWeekend) => void): void {
-    this.http.get<Rt1InOneWeekend>(this.baseUrl + 'rt1inoneweekend').subscribe(result => {
+  public initRayTrace(initRayTraceCallback: (raytrace: RayTraceModel) => void): void {
+    this.http.get<RayTraceModel>(this.baseUrl + 'raytrace').subscribe(result => {
       this.raytrace = result;
       initRayTraceCallback(this.raytrace);
     }, error => console.error(error));
@@ -71,7 +71,7 @@ export class Rt1Service {
     if (!this.running || !this.view)
       return;
 
-    this.http.get<Rt1InOneWeekendImageData>(this.baseUrl + 'rt1inoneweekendimagedata').subscribe(result => {
+    this.http.get<RayTraceImageData>(this.baseUrl + 'raytraceimagedata').subscribe(result => {
       const pixelData = result.pixelData;
       if (pixelData) {
         this.texture.bind(0);

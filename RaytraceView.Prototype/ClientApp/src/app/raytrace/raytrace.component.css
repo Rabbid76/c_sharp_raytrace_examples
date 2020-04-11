@@ -1,0 +1,11 @@
+app-raytrace-controls {
+  position: absolute;
+  left: 20px
+}
+
+app-raytrace-view {
+  position: absolute;
+  left: 160px
+}
+
+
