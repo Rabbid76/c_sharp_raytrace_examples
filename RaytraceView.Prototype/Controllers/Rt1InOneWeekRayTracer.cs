@@ -14,12 +14,14 @@ namespace RaytraceView.Prototype.Controllers
 {
     public class Rt1InOneWeekRayTracer
     {
+        private static Rt1InOneWeekRayTracer rayTracer;
         private RayTraceProcess rayTraceProcess;
         private readonly object rayTraceLock = new object();
         private double progress;
         private List<PixelData> pixelData = new List<PixelData>();
-        private static Rt1InOneWeekRayTracer rayTracer;
+        private string[] scenes = new string[] { "Cover scene", "Materials", "Defocus Blur", "Test" };
 
+        public string[] Scenes { get => scenes; }
         public Rt1InOneWeekendParameterModel Parameter { get; set; }
 
         public static Rt1InOneWeekRayTracer RayTracerSingleton()
@@ -33,6 +35,7 @@ namespace RaytraceView.Prototype.Controllers
         {
             Parameter = new Rt1InOneWeekendParameterModel
             {
+                SceneName = Scenes[0],
                 Width = 600,
                 Height = 300,
                 Samples = 100,
@@ -56,7 +59,7 @@ namespace RaytraceView.Prototype.Controllers
                 Samples = Parameter.Samples,
                 UpdateRate = Parameter.UpdateRate,
             };
-            var sceneType = 0;
+            var sceneType = Scenes.ToList().FindIndex((name) => Parameter.SceneName == name);
             var aspect = (double)rayTraceConfguration.Width / (double)rayTraceConfguration.Height;
             IScene scene;
             switch (sceneType)
@@ -71,7 +74,7 @@ namespace RaytraceView.Prototype.Controllers
             var rayTraceTarget = new RayTraceTargetAdapter
             (
                 progress => this.progress = progress,
-                (x, y, c) => SetPixel(x, y, ColorFactory.CreateSquare(c))
+                (x, y, c) => SetPixel(x, y, ColorFactory.CreateSquare(c), rayTraceConfguration.Width, rayTraceConfguration.Height)
             );
             rayTraceProcess = new RayTraceProcess(rayTraceConfguration, rayTracer, rayTraceTarget);
             rayTraceProcess.StartAsync();
@@ -82,12 +85,12 @@ namespace RaytraceView.Prototype.Controllers
             rayTraceProcess?.WaitStop();
         }
 
-        private void SetPixel(int x, int y, Color color)
+        private void SetPixel(int x, int y, Color color, int w, int h)
         {
             var newPixelData = new PixelData
             {
                 X = x,
-                Y = 300 - 1 - y,
+                Y = h - 1 - y,
                 R = color.R,
                 G = color.G,
                 B = color.B

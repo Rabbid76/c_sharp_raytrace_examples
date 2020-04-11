@@ -1,7 +1,10 @@
 <div [formGroup]="form" (ngSubmit)="onSubmit()">
   <p><button (click)="onSubmit()">Apply</button></p>
-  <p><input type="text" formControlName="width" required/></p>
-  <p><input type="text" formControlName="height" required/></p>
-  <p><input type="text" formControlName="samples" required/></p>
-  <p><input type="range" id="updaterate" min="0" max="100"/></p>
+  <p><select formControlName="sceneName" required>
+      <option *ngFor="let scene of scenes" [ngValue]="scene">{{ scene }}</option>
+    </select></p>
+  <p><input type="text" formControlName="width" required /></p>
+  <p><input type="text" formControlName="height" required /></p>
+  <p><input type="text" formControlName="samples" required /></p>
+  <p><input type="range" formControlName="updaterate" min="0" max="100" /></p>
 </div>

@@ -39,6 +39,7 @@ namespace RaytraceView.Prototype.Controllers
             var imageString = ByteArrayToString(imageBytes);
             var parameter = new ViewModel.Rt1InOneWeekendParameterModel
             {
+                SceneName = rayTracer.Parameter.SceneName,
                 Width = rayTracer.Parameter.Width,
                 Height = rayTracer.Parameter.Height,
                 Samples = rayTracer.Parameter.Samples,
@@ -48,6 +49,7 @@ namespace RaytraceView.Prototype.Controllers
             {
                 Title = "Ray Tracing in One Weekend",
                 ImagePng = imageString,
+                Scenes = rayTracer.Scenes,
                 Parameter = parameter
             };
             return model;
