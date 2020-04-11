@@ -30,8 +30,8 @@ namespace rt_2_the_next_week.raytrace.Textures
                 default:
                 case Type.DEFAULT: noise = _noise.Noise(p * _scale); break;
                 case Type.TURB: noise = _noise.Turb(p * _scale); break;
-                case Type.SIN_X: noise = Math.Sin(_scale * p.X + 5 * _noise.Turb(p * _scale)); break;
-                case Type.SIN_Y: noise = Math.Sin(_scale * p.Y + 5 * _noise.Turb(p * _scale)); break;
+                case Type.SIN_X: noise = Math.Sin(_scale * p.X + 10 * _noise.Turb(p * _scale)); break;
+                case Type.SIN_Y: noise = Math.Sin(_scale * p.Y + 10 * _noise.Turb(p * _scale)); break;
                 case Type.SIN_Z: noise = Math.Sin(_scale * p.Z + 10 * _noise.Turb(p * _scale)); break;
             }
             return Vec3.Create(1.0) * (noise * 0.5 + 0.5);

@@ -65,8 +65,9 @@ namespace rt_2_the_next_week.raytrace.Hitables.Shapes
                     //rec = new HitRecord(temp, p, (p - _center) / _radius, _material);
                     (double px, double py, double pz) = (ox + dx * temp, oy + dy * temp, oz + dz * temp);
                     var p = Vec3.Create(px, py, pz);
+                    var n = Vec3.Create(px - _cptx, py - _cpty, pz - _cptz) / _radius;
                     (double u, double v) = Function.GetSphereUV(p / _radius);
-                    rec = new HitRecord(temp, u, v, p, Vec3.Create(px - _cptx, py - _cpty, pz - _cptz) / _radius, _material);
+                    rec = new HitRecord(temp, u, v, p, n, _material);
                     return true;
                 }
             }

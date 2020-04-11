@@ -23,7 +23,7 @@ namespace rt_2_the_next_week.raytrace.Scenes
             //string[] names = assembly.GetManifestResourceNames();
             var resource_stream = assembly.GetManifestResourceStream("rt_2_the_next_week.raytrace.Resource.worldmap1.png");
             var worldmap_texture = Texture.Create(resource_stream);
-            var perlin_texture = NoiseTexture.Create(1, NoiseTexture.Type.SIN_Z);
+            var perlin_texture = NoiseTexture.Create(0.05, NoiseTexture.Type.SIN_Z);
             var hitables = new List<IHitable>();
             var sampler = new Random();
             var white = new Lambertian(ConstantTexture.Create(0.73, 0.73, 0.73));
