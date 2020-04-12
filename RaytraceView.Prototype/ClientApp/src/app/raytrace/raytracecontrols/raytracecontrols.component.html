@@ -1,10 +1,51 @@
 <div [formGroup]="form" (ngSubmit)="onSubmit()">
-  <p><button (click)="onSubmit()" title="Apply settings and restart ray tracing">Apply</button></p>
-  <p><select formControlName="sceneName" required title="Scene">
+  <div class="form-group">
+    <button (click)="onSubmit()" [disabled]="form.invalid" title="Apply settings and restart ray tracing">Apply</button>
+  </div>
+  <div class="form-group">
+    <select formControlName="sceneName" required title="Scene">
       <option *ngFor="let scene of scenes" [ngValue]="scene">{{ scene }}</option>
-    </select></p>
-  <p><input type="text" formControlName="width" required title="Width"/></p>
-  <p><input type="text" formControlName="height" required title="Height" /></p>
-  <p><input type="text" formControlName="samples" required title="Samples"/></p>
-  <p><input type="range" formControlName="updaterate" min="0" max="100" title="Update rate"/></p>
+    </select>
+  </div>
+  <div class="form-group">
+    <input type="text" formControlName="width" required title="Width" /><br />
+    <div *ngIf="form.get('width').invalid && (form.get('width').dirty || form.get('width').touched)" class="invalid-feedback">
+      <div *ngIf="form.get('width').errors?.required">
+        Width is required.
+      </div>
+      <div *ngIf="form.get('width').errors?.lessOrEqualZero">
+        Width has to be greater than 0.
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="text" formControlName="height" required title="Height" /><br />
+    <div *ngIf="form.get('height').invalid && (form.get('height').dirty || form.get('height').touched)" class="invalid-feedback">
+      <div *ngIf="form.get('height').errors?.required">
+        Height is required.
+      </div>
+      <div *ngIf="form.get('height').errors?.lessOrEqualZero">
+        Height has to be greater than 0.
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="text" formControlName="samples" required title="Samples" /><br />
+    <div *ngIf="form.get('samples').invalid && (form.get('samples').dirty || form.get('samples').touched)" class="invalid-feedback">
+      <div *ngIf="form.get('samples').errors?.required">
+        Samples is required.
+      </div>
+      <div *ngIf="form.get('samples').errors?.lessOrEqualZero">
+        Samples has to be greater than 0.
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="range" formControlName="updaterate" min="0" max="100" title="Update rate" /><br />
+    <div *ngIf="form.get('updaterate').invalid && (form.get('updaterate').dirty || form.get('updaterate').touched)" class="invalid-feedback">
+      <div *ngIf="form.get('updaterate').errors?.required">
+        Update rate is required.
+      </div>
+    </div>
+  </div>
 </div>
