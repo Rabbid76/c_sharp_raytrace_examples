@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace RaytraceView.Prototype.Controllers
@@ -25,6 +21,16 @@ namespace RaytraceView.Prototype.Controllers
         {
             var model = rayTracer?.GetPixelData();
             return model;
+        }
+
+        [HttpPost]
+        [Route("IsInvalidRayTraceModel")]
+        public bool IsInvalidRayTraceModel(ViewModel.RayTraceParameterModel parameter)
+        {
+            return
+                parameter.Width < 1 || parameter.Width > 4096 ||
+                parameter.Height < 1 || parameter.Height > 4096 ||
+                parameter.Samples < 1 || parameter.Samples > 1000000;
         }
     }
 }

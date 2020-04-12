@@ -1,8 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RayTraceService } from '../../services/raytrace.service';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { RayTraceParameter } from '../../services/model/raytracemodels';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 function psitiveNonZeroNumber(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -35,15 +37,26 @@ export class RayTraceControlsComponent {
       height: new FormControl(this.service.raytrace.parameter.height, [Validators.required, psitiveNonZeroNumber()]),
       samples: new FormControl(this.service.raytrace.parameter.samples, [Validators.required, psitiveNonZeroNumber()]),
       updaterate: new FormControl(this.service.raytrace.parameter.updateRate * 100, Validators.required),
-    }, null, null);
+    }, null, this.isInvalidRayTraceModel());
     this.service.controls = this;
   }
 
-  static positiveNumber(control: FormControl): { [key: string]: any; } {
-    if (Number(control.value) > 0) {
-      return { positiveNumber: true };
-    } else {
-      return null;
+  isInvalidRayTraceModel(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      const parameter: RayTraceParameter =
+      {
+        sceneName: this.form ? this.form.get("sceneName").value : "",
+        width: this.form ? +this.form.get("width").value : 1,
+        height: this.form ? +this.form.get("height").value : 1,
+        samples: this.form ? +this.form.get("samples").value : 1,
+        updateRate: this.form ? +this.form.get("updaterate").value / 100 : 0.1
+      };
+
+      var url = this.baseUrl + "raytraceimagedata/IsInvalidRayTraceModel";
+      return this.http.post<boolean>(url, parameter).pipe(map(result => {
+
+        return (result ? { isInvalidRayTraceModel: true } : null);
+      }));
     }
   }
 

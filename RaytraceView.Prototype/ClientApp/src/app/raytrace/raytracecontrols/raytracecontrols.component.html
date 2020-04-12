@@ -1,4 +1,9 @@
 <div [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div *ngIf="form.invalid && form.errors && form.errors?.isInvalidRayTraceModel"
+       class="alert alert-danger">
+    <strong>ERROR</strong>:
+    Invalid ray trace parameters <i>width</i>, <i>height</i>, <i>samples</i>.
+  </div>
   <div class="form-group">
     <button (click)="onSubmit()" [disabled]="form.invalid" title="Apply settings and restart ray tracing">Apply</button>
   </div>
