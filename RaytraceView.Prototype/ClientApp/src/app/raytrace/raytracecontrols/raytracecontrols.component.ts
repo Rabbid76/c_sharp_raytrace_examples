@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RayTraceService } from '../../services/raytrace.service';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { RayTraceParameter } from '../../services/model/raytracemodels';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,6 +24,7 @@ export class RayTraceControlsComponent {
   scenes: string[];
 
   constructor(
+    private fb: FormBuilder,
     private service: RayTraceService,
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string) {
@@ -31,13 +32,16 @@ export class RayTraceControlsComponent {
 
   ngOnInit(): void {
     this.scenes = this.service.raytrace.scenes;
-    this.form = new FormGroup({
-      sceneName: new FormControl(this.service.raytrace.parameter.sceneName, Validators.required),
-      width: new FormControl(this.service.raytrace.parameter.width, [Validators.required, psitiveNonZeroNumber()]),
-      height: new FormControl(this.service.raytrace.parameter.height, [Validators.required, psitiveNonZeroNumber()]),
-      samples: new FormControl(this.service.raytrace.parameter.samples, [Validators.required, psitiveNonZeroNumber()]),
-      updaterate: new FormControl(this.service.raytrace.parameter.updateRate * 100, Validators.required),
-    }, null, this.isInvalidRayTraceModel());
+    
+    this.form = this.fb.group({
+      sceneName: [this.service.raytrace.parameter.sceneName, Validators.required],
+      width: [this.service.raytrace.parameter.width, [Validators.required, psitiveNonZeroNumber()]],
+      height: [this.service.raytrace.parameter.height, [Validators.required, psitiveNonZeroNumber()]],
+      samples: [this.service.raytrace.parameter.samples, [Validators.required, psitiveNonZeroNumber()]],
+      updaterate: [this.service.raytrace.parameter.updateRate * 100, Validators.required],
+    });
+    this.form.setAsyncValidators(this.isInvalidRayTraceModel());
+
     this.service.controls = this;
   }
 
