@@ -35,9 +35,9 @@ export class RayTraceControlsComponent {
     
     this.form = this.fb.group({
       sceneName: [this.service.raytrace.parameter.sceneName, Validators.required],
-      width: [this.service.raytrace.parameter.width, [Validators.required, psitiveNonZeroNumber()]],
-      height: [this.service.raytrace.parameter.height, [Validators.required, psitiveNonZeroNumber()]],
-      samples: [this.service.raytrace.parameter.samples, [Validators.required, psitiveNonZeroNumber()]],
+      width: [this.service.raytrace.parameter.width, [Validators.required, Validators.pattern('^[-]?[0-9]+(\.[0-9]{1,4})?$'), psitiveNonZeroNumber()]],
+      height: [this.service.raytrace.parameter.height, [Validators.required, Validators.pattern('^[-]?[0-9]+(\.[0-9]{1,4})?$'), psitiveNonZeroNumber()]],
+      samples: [this.service.raytrace.parameter.samples, [Validators.required, Validators.pattern('^[-]?[0-9]+(\.[0-9]{1,4})?$'), psitiveNonZeroNumber()]],
       updaterate: [this.service.raytrace.parameter.updateRate * 100, Validators.required],
     });
     this.form.setAsyncValidators(this.isInvalidRayTraceModel());

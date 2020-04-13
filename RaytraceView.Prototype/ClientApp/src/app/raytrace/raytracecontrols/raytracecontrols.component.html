@@ -18,7 +18,7 @@
       <div *ngIf="form.get('width').errors?.required">
         Width is required.
       </div>
-      <div *ngIf="form.get('width').errors?.lessOrEqualZero">
+      <div *ngIf="form.get('width').errors?.pattern || form.get('width').errors?.lessOrEqualZero">
         Width has to be greater than 0.
       </div>
     </div>
@@ -29,7 +29,7 @@
       <div *ngIf="form.get('height').errors?.required">
         Height is required.
       </div>
-      <div *ngIf="form.get('height').errors?.lessOrEqualZero">
+      <div *ngIf="form.get('height').errors?.pattern || form.get('height').errors?.lessOrEqualZero">
         Height has to be greater than 0.
       </div>
     </div>
@@ -40,7 +40,7 @@
       <div *ngIf="form.get('samples').errors?.required">
         Samples is required.
       </div>
-      <div *ngIf="form.get('samples').errors?.lessOrEqualZero">
+      <div *ngIf="form.get('samples').errors?.pattern || form.get('samples').errors?.lessOrEqualZero">
         Samples has to be greater than 0.
       </div>
     </div>
