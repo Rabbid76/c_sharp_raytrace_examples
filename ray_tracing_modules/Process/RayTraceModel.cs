@@ -7,5 +7,6 @@ namespace ray_tracing_modules.Process
         public int X { get; set; }
         public int Y { get; set; }
         public RGBColor Color { get; set; }
+        public double Progress { get; set; }
     }
 }
