@@ -12,7 +12,7 @@ namespace rt_2_the_next_week.Model
     public class RayTraceModel
     {
         private RayTraceViewModel rayTraceViewModel;
-        private RayTraceProcess rayTraceProcess;
+        private RayTraceProcessHandler rayTraceProcess;
 
         public RayTraceModel()
         { }
@@ -56,7 +56,7 @@ namespace rt_2_the_next_week.Model
                 progress => rayTraceViewModel.Progress = progress,
                 (x, y, c) => rayTraceViewModel.SetBitmapPixel(x, y, ColorFactory.CreateSquare(c))
             );
-            rayTraceProcess = new RayTraceProcess(rayTraceConfguration, rayTracer, rayTraceTarget);
+            rayTraceProcess = new RayTraceProcessHandler(rayTraceConfguration, rayTracer, rayTraceTarget);
             rayTraceProcess.StartAsync();
         }
 

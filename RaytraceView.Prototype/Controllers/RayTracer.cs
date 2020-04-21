@@ -13,7 +13,7 @@ namespace RaytraceView.Prototype.Controllers
     public class RayTracer
     {
         private static RayTracer rayTracer;
-        private RayTraceProcess rayTraceProcess;
+        private RayTraceProcessHandler rayTraceProcess;
         private readonly object rayTraceLock = new object();
         private double progress;
         private List<PixelData> pixelData = new List<PixelData>();
@@ -84,7 +84,7 @@ namespace RaytraceView.Prototype.Controllers
                 progress => this.progress = progress,
                 (x, y, c) => SetPixel(x, y, ColorFactory.CreateSquare(c), rayTraceConfguration.Width, rayTraceConfguration.Height)
             );
-            rayTraceProcess = new RayTraceProcess(rayTraceConfguration, rayTracer, rayTraceTarget);
+            rayTraceProcess = new RayTraceProcessHandler(rayTraceConfguration, rayTracer, rayTraceTarget);
             rayTraceProcess.StartAsync();
         }
 

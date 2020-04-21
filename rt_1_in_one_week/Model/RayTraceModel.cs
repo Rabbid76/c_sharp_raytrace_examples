@@ -12,7 +12,7 @@ namespace rt_1_in_one_week.Model
     public class RayTraceModel
     {
         private RayTraceViewModel rayTraceViewModel;
-        private RayTraceProcess rayTraceProcess;
+        private RayTraceProcessHandler rayTraceProcess;
 
         public RayTraceModel()
         { }
@@ -24,6 +24,8 @@ namespace rt_1_in_one_week.Model
 
         public void StartRayTrace()
         {
+            rayTraceProcess?.WaitStop();
+
             var rayTraceConfguration = new RayTraceConfigurationModel
             {
                 Width = rayTraceViewModel.BitmapWidth,
@@ -48,7 +50,7 @@ namespace rt_1_in_one_week.Model
                 progress => rayTraceViewModel.Progress = progress,
                 (x, y, c) => rayTraceViewModel.SetBitmapPixel(x, y, ColorFactory.CreateSquare(c))
             );
-            rayTraceProcess = new RayTraceProcess(rayTraceConfguration, rayTracer, rayTraceTarget);
+            rayTraceProcess = new RayTraceProcessHandler(rayTraceConfguration, rayTracer, rayTraceTarget);
             rayTraceProcess.StartAsync();
         }
 
