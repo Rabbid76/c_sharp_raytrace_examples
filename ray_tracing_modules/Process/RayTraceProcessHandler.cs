@@ -38,8 +38,7 @@ namespace ray_tracing_modules.Process
         {
             //if (enumertator != null)
             //    enumertator.KeepRendering = false;
-            if (enumerable != null)
-                enumerable.KeepRendering = false;
+            enumerable?.CancelRendering();
         }
 
         public async Task RayTraceAsync()

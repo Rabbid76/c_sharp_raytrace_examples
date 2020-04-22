@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ray_tracing_modules.Color;
 using ray_tracing_modules.RayTraycer.Interfaces;
@@ -10,6 +11,7 @@ namespace ray_tracing_modules.Process
     {
         readonly private RayTraceProcessEnumertor _process;
         readonly private IProgress<double> _progress;
+        readonly private CancellationTokenSource _cancelationSource = new CancellationTokenSource();
 
         public RayTraceProcessAsyncEnumerable(
            IRayTraceConfigurationModel confguration, Func<double, double, RGBColor> background, IProgress<double> progress)
@@ -18,7 +20,7 @@ namespace ray_tracing_modules.Process
             this._process = new RayTraceProcessEnumertor(confguration, background);
         }
 
-        public bool KeepRendering { set => this._process.KeepRendering = value; }
+        public void CancelRendering() => _cancelationSource.Cancel();
 
         public async IAsyncEnumerable<RayTraceModel> RayTrace()
         {
@@ -31,6 +33,8 @@ namespace ray_tracing_modules.Process
                     this._progress?.Report(rayTraceData.Progress);
                     yield return rayTraceData;
                 }
+                if (_cancelationSource.IsCancellationRequested)
+                    break;
             }
         }
     }
