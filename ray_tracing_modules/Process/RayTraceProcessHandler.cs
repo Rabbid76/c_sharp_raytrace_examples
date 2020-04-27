@@ -63,7 +63,8 @@ namespace ray_tracing_modules.Process
             enumerable = new RayTraceProcessAsyncEnumerable(this.confguration, rayTracer.RaytraceColor, null);
             await Task.Run(async () =>
             {
-                await foreach (var rayTraceData in enumerable.RayTrace())
+                var toke = enumerable.CancellationToken;
+                await foreach (var rayTraceData in enumerable.RayTrace(toke))
                 {
                     target.SetPixel(rayTraceData.X, rayTraceData.Y, rayTraceData.Color);
                     this.target.Progress = rayTraceData.Progress;

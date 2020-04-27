@@ -22,7 +22,9 @@ namespace ray_tracing_modules.Process
 
         public void CancelRendering() => _cancelationSource.Cancel();
 
-        public async IAsyncEnumerable<RayTraceModel> RayTrace()
+        public CancellationToken CancellationToken { get => _cancelationSource.Token; }
+
+        public async IAsyncEnumerable<RayTraceModel> RayTrace(CancellationToken cancellationToken)
         {
             await Task.Delay(1);
             while (this._process.MoveNext())
@@ -33,7 +35,7 @@ namespace ray_tracing_modules.Process
                     this._progress?.Report(rayTraceData.Progress);
                     yield return rayTraceData;
                 }
-                if (_cancelationSource.IsCancellationRequested)
+                if (cancellationToken.IsCancellationRequested)
                     break;
             }
         }
