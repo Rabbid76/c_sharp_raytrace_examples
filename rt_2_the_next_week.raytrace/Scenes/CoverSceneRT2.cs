@@ -8,6 +8,7 @@ using rt_2_the_next_week.raytrace.Materials;
 using rt_2_the_next_week.raytrace.Hitables.Collections;
 using rt_2_the_next_week.raytrace.Hitables.Shapes;
 using rt_2_the_next_week.raytrace.Hitables.Instancing;
+using rt_2_the_next_week.raytrace.Hitables.Volumes;
 
 namespace rt_2_the_next_week.raytrace.Scenes
 {
