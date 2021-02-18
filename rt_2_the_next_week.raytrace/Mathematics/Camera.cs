@@ -31,7 +31,7 @@ namespace rt_2_the_next_week.raytrace.Mathematics
                 Vec3.Create(0.0), 0, 0, 0);
         }
 
-        public static Camera CreateLookAt(Vec3 lookFrom, Vec3 lookAt, Vec3 vup, double vfov, double aspect, double aderpture = 0, double fous_dist=1, double t0 = 0, double t1 = 0)
+        public static Camera CreateLookAt(Vec3 lookFrom, Vec3 lookAt, Vec3 vup, double vfov, double aspect, double aderpture = 0, double focus_dist=1, double t0 = 0, double t1 = 0)
         {
             double theta = vfov * Math.PI / 180;
             double half_height = Math.Tan(theta / 2);
@@ -40,9 +40,9 @@ namespace rt_2_the_next_week.raytrace.Mathematics
             Vec3 u = Vec3.Cross(vup, w);
             Vec3 v = Vec3.Cross(w, u);
             return new Camera(
-                lookFrom - u * half_width * fous_dist - v * half_height * fous_dist - w * fous_dist,
-                u * half_width * 2 * fous_dist,
-                v * half_height * 2 * fous_dist,
+                lookFrom - u * half_width * focus_dist - v * half_height * focus_dist - w * focus_dist,
+                u * half_width * 2 * focus_dist,
+                v * half_height * 2 * focus_dist,
                 lookFrom.Clone(),
                 aderpture / 2, t0, t1);
         }
