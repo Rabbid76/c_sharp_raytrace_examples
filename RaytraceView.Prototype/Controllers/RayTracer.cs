@@ -76,7 +76,7 @@ namespace RaytraceView.Prototype.Controllers
                 case 8: scene = new CoverSceneRT1Motion(aspect); break;
                 case 9: scene = new MaterialsScene(aspect); break;
                 case 10: scene = new DefocusBlurScene(aspect); break;
-                case 11: scene = new TestScene(aspect); break;
+                case 11: scene = new TestScene1(aspect); break;
             }
             var rayTracer = new rt_2_the_next_week.raytrace.RayTracer.RayTracer(scene);
             var rayTraceTarget = new RayTraceTargetAdapter

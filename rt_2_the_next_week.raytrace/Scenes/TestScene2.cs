@@ -8,13 +8,13 @@ using rt_2_the_next_week.raytrace.Hitables.Shapes;
 
 namespace rt_2_the_next_week.raytrace.Scenes
 {
-    public class TestScene
+    public class TestScene2
         : IScene
     {
         public Camera Camera { get; }
         public IHitable World { get; }
 
-        public TestScene(double aspect)
+        public TestScene2(double aspect)
         {
             double R = Math.Cos(Math.PI / 4);
             IHitable[] hitables = {
