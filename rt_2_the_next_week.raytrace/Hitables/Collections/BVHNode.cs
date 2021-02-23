@@ -21,7 +21,8 @@ namespace rt_2_the_next_week.raytrace.Hitables.Collections
         {
             if (hitables.Length == 1)
             {
-                _left = _right = hitables[0];
+                _left = hitables[0];
+                _right = null;
                 _left.BoundingBox(time0, time1, out _box);
                 return;
             }
@@ -66,8 +67,13 @@ namespace rt_2_the_next_week.raytrace.Hitables.Collections
 
             HitRecord left_rec, right_rec;
             bool hit_left = _left.Hit(r, t_min, t_max, out left_rec);
-            bool hit_right = _right.Hit(r, t_min, t_max, out right_rec);
+            if (_right == null)
+            {
+                rec = left_rec;
+                return hit_left;
+            }
 
+            bool hit_right = _right.Hit(r, t_min, t_max, out right_rec);
             if (hit_left && hit_right)
             {
                 rec = left_rec.T < right_rec.T ? left_rec : right_rec;
