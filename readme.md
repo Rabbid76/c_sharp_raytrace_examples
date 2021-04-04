@@ -54,8 +54,9 @@ Based on [Peter Shirley's](https://research.nvidia.com/person/peter-shirley) boo
 
 Recommended
 
-- [PyGame Ray tracing](https://github.com/Rabbid76/PyGameRayTracing)
 - [PeterShirley/raytracing.github.io](https://github.com/RayTracing/raytracing.github.io)
 - [PeterShirley/RayTraycingInOneWeekend](https://github.com/RayTracing/InOneWeekend)
 - [PeterShirley/RayTraycingTheNextWeek](https://github.com/RayTracing/TheNextWeek)
 - [PeterShirley/RayTraycingTheRestOfYourLife](https://github.com/RayTracing/TheRestOfYourLife)
+- [Ray Tracing in rust](https://github.com/Rabbid76/ray-tracing-with-rust)
+- [PyGame Ray tracing](https://github.com/Rabbid76/PyGameRayTracing)
